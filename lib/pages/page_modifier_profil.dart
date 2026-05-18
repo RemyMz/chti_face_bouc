@@ -3,6 +3,7 @@ import '../modeles/membre.dart';
 import '../modeles/constantes.dart';
 import '../services_firebase/service_firestore.dart';
 import '../services_firebase/service_authentification.dart';
+import '../modeles/donnees.dart';
 
 /// Page permettant à l'utilisateur de modifier ses informations personnelles (nom, prénom, description).
 class PageModifierProfil extends StatefulWidget {
@@ -97,7 +98,7 @@ class _PageModifierProfilState extends State<PageModifierProfil> {
                   builder: (BuildContext context) {
                     return AlertDialog(
                       title: const Text("Déconnexion"),
-                      content: const Text("Voulez vous vous déconnecter ?"),
+                      content: const Text(Donnees.logoutConfirm),
                       actions: [
                         TextButton(
                           onPressed: () => Navigator.pop(context), 
