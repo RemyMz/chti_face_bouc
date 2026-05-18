@@ -10,7 +10,10 @@ import '../widgets/bouton_camera.dart';
 import '../widgets/widget_post.dart';
 import 'page_modifier_profil.dart';
 
+/// Page de profil d'un membre.
+/// Permet de voir les informations, les images (couverture/profil) et les publications du membre.
 class PageProfil extends StatefulWidget {
+  /// Le membre dont on affiche le profil.
   final Membre member;
   const PageProfil({super.key, required this.member});
 
@@ -21,6 +24,7 @@ class PageProfil extends StatefulWidget {
 class _PageProfilState extends State<PageProfil> {
   @override
   Widget build(BuildContext context) {
+    // Vérifie si le profil affiché est celui de l'utilisateur connecté
     bool isMe = ServiceAuthentification().isMe(widget.member.id);
 
     return StreamBuilder<DocumentSnapshot>(
@@ -36,6 +40,7 @@ class _PageProfilState extends State<PageProfil> {
         );
 
         return StreamBuilder<QuerySnapshot>(
+          // Récupère uniquement les publications de ce membre
           stream: ServiceFirestore().postForMember(member.id),
           builder: (context, postSnapshot) {
             if (postSnapshot.hasError) {
@@ -54,12 +59,13 @@ class _PageProfilState extends State<PageProfil> {
                 itemCount: docs.length + 1, // +1 pour l'en-tête (profil)
                 itemBuilder: (context, index) {
                   if (index == 0) {
-                    // L'en-tête du profil (Etape 6)
+                    // Section en-tête : Couverture, Avatar, Infos
                     return Column(
                       children: [
                         Stack(
                           alignment: Alignment.bottomCenter,
                           children: [
+                            // Image de couverture
                             Container(
                               height: 200,
                               width: double.infinity,
@@ -74,6 +80,7 @@ class _PageProfilState extends State<PageProfil> {
                                 child: BoutonCamera(type: coverPictureKey, id: member.id),
                               ) : null,
                             ),
+                            // Photo de profil décalée
                             Transform.translate(
                               offset: const Offset(0, 50),
                               child: Stack(
@@ -93,6 +100,7 @@ class _PageProfilState extends State<PageProfil> {
                           padding: const EdgeInsets.all(15),
                           child: Text(member.description.isEmpty ? "Pas encore de description..." : member.description),
                         ),
+                        // Bouton d'édition visible uniquement sur son propre profil
                         if (isMe) OutlinedButton(
                           onPressed: () {
                             Navigator.push(context, MaterialPageRoute(
@@ -106,7 +114,7 @@ class _PageProfilState extends State<PageProfil> {
                       ],
                     );
                   } else {
-                    // Les posts de l'utilisateur (Etape 9.3)
+                    // Liste des publications du membre
                     final postDoc = docs[index - 1];
                     final Post post = Post(
                       reference: postDoc.reference,

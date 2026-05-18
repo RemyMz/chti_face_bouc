@@ -6,6 +6,7 @@ import '../widgets/avatar.dart';
 import '../widgets/widget_vide.dart';
 import 'page_profil.dart';
 
+/// Page affichant la liste de tous les membres inscrits sur l'application.
 class PageMembres extends StatefulWidget {
   const PageMembres({super.key});
 
@@ -21,6 +22,7 @@ class _PageMembresState extends State<PageMembres> {
         title: const Text("Les membres"),
       ),
       body: StreamBuilder<QuerySnapshot>(
+        // Écoute en temps réel de tous les utilisateurs inscrits
         stream: ServiceFirestore().allMembers(),
         builder: (context, snapshot) {
           if (snapshot.hasData) {
@@ -43,7 +45,7 @@ class _PageMembresState extends State<PageMembres> {
                   title: Text(member.fullName),
                   subtitle: Text(member.description, maxLines: 1, overflow: TextOverflow.ellipsis),
                   onTap: () {
-                    // Etape 7.3 : Renvoyer sur sa page de profil
+                    // Navigation vers la page de profil du membre sélectionné
                     Navigator.push(context, MaterialPageRoute(
                       builder: (context) => PageProfil(member: member)
                     ));

@@ -5,13 +5,16 @@ import '../modeles/commentaire.dart';
 import '../services_firebase/service_firestore.dart';
 import '../widgets/entete_membre.dart';
 
+/// Widget affichant la liste des commentaires pour une publication donnée.
 class ListeCommentaire extends StatelessWidget {
+  /// La publication pour laquelle on affiche les commentaires.
   final Post post;
   const ListeCommentaire({super.key, required this.post});
 
   @override
   Widget build(BuildContext context) {
     return StreamBuilder<QuerySnapshot>(
+      // Écoute les commentaires liés à ce post dans Firestore
       stream: ServiceFirestore().postComment(postId: post.id),
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
@@ -28,6 +31,7 @@ class ListeCommentaire extends StatelessWidget {
         final docs = snapshot.data!.docs;
         return ListView.separated(
           shrinkWrap: true,
+          // Désactive le scroll propre pour s'intégrer dans un SingleChildScrollView parent
           physics: const NeverScrollableScrollPhysics(),
           itemCount: docs.length,
           separatorBuilder: (context, index) => const Divider(),

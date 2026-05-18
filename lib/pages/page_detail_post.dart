@@ -4,7 +4,9 @@ import '../services_firebase/service_firestore.dart';
 import '../widgets/widget_post.dart';
 import '../widgets/liste_commentaire.dart';
 
+/// Page affichant les détails d'une publication ainsi que ses commentaires.
 class PageDetailPost extends StatefulWidget {
+  /// La publication à afficher en détail.
   final Post post;
   const PageDetailPost({super.key, required this.post});
 
@@ -27,10 +29,12 @@ class _PageDetailPostState extends State<PageDetailPost> {
     super.dispose();
   }
 
+  /// Gère l'envoi d'un nouveau commentaire.
   void _handleSend() {
     if (commentController.text.trim().isEmpty) return;
     ServiceFirestore().addComment(post: widget.post, text: commentController.text.trim());
     commentController.clear();
+    // Ferme le clavier après l'envoi
     FocusScope.of(context).unfocus();
   }
 
@@ -43,10 +47,10 @@ class _PageDetailPostState extends State<PageDetailPost> {
       body: SingleChildScrollView(
         child: Column(
           children: [
-            // Etape 11.4 : WidgetPost
+            // Rappel de la publication originale
             WidgetPost(post: widget.post),
             
-            // Etape 11.4 : Padding > Row > TextField & IconButton
+            // Champ de saisie pour ajouter un commentaire
             Padding(
               padding: const EdgeInsets.all(10.0),
               child: Row(
@@ -67,7 +71,7 @@ class _PageDetailPostState extends State<PageDetailPost> {
               ),
             ),
 
-            // Etape 11.4 : ListeCommentaire
+            // Liste des commentaires existants récupérés en temps réel
             ListeCommentaire(post: widget.post),
           ],
         ),

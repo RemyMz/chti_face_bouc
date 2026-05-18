@@ -4,7 +4,9 @@ import '../modeles/constantes.dart';
 import '../services_firebase/service_firestore.dart';
 import '../services_firebase/service_authentification.dart';
 
+/// Page permettant à l'utilisateur de modifier ses informations personnelles (nom, prénom, description).
 class PageModifierProfil extends StatefulWidget {
+  /// Le membre dont on souhaite modifier les informations.
   final Membre member;
   const PageModifierProfil({super.key, required this.member});
 
@@ -13,15 +15,14 @@ class PageModifierProfil extends StatefulWidget {
 }
 
 class _PageModifierProfilState extends State<PageModifierProfil> {
-  // a) Les variables
   late TextEditingController surnameController;
   late TextEditingController nameController;
   late TextEditingController descriptionController;
 
-  // b) Les méthodes initState() et dispose()
   @override
   void initState() {
     super.initState();
+    // Initialisation des champs avec les données actuelles
     surnameController = TextEditingController(text: widget.member.surname);
     nameController = TextEditingController(text: widget.member.name);
     descriptionController = TextEditingController(text: widget.member.description);
@@ -35,7 +36,7 @@ class _PageModifierProfilState extends State<PageModifierProfil> {
     super.dispose();
   }
 
-  // d) La fonction _onValidate
+  /// Valide les changements et met à jour Firestore uniquement pour les champs modifiés.
   void _onValidate() {
     FocusScope.of(context).requestFocus(FocusNode());
     Map<String, dynamic> data = {};
@@ -88,6 +89,7 @@ class _PageModifierProfilState extends State<PageModifierProfil> {
               maxLines: null,
             ),
             const SizedBox(height: 30),
+            // Section déconnexion
             ElevatedButton(
               onPressed: () {
                 showDialog(

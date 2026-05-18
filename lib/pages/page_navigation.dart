@@ -10,6 +10,8 @@ import 'page_ecrire_post.dart';
 import 'page_profil.dart';
 import 'page_notif.dart';
 
+/// Page principale gérant la navigation par onglets (BottomNavigationBar).
+/// Elle charge les données de l'utilisateur connecté et orchestre l'affichage des différentes sections.
 class PageNavigation extends StatefulWidget {
   const PageNavigation({super.key});
 
@@ -18,15 +20,18 @@ class PageNavigation extends StatefulWidget {
 }
 
 class _PageNavigationState extends State<PageNavigation> {
+  /// Index de l'onglet actuellement sélectionné.
   int index = 0;
 
   @override
   Widget build(BuildContext context) {
     final memberId = ServiceAuthentification().myId;
     
+    // Si l'utilisateur n'est pas identifié, on affiche un écran vide sécurisé
     if (memberId == null) return const EmptyScaffold();
 
     return StreamBuilder<DocumentSnapshot>(
+      // Récupère les informations détaillées du membre connecté
       stream: ServiceFirestore().specificMember(memberId),
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
@@ -42,10 +47,12 @@ class _PageNavigationState extends State<PageNavigation> {
             map: data.data() as Map<String, dynamic>
           );
 
+          // Liste des pages disponibles dans la navigation
           List<Widget> bodies = [
             const PageAccueil(),
             const PageMembres(),
             PageEcrirePost(member: member, onPostSent: (newIndex) {
+              // Callback pour changer d'onglet après publication d'un post
               setState(() {
                 index = newIndex;
               });

@@ -6,13 +6,16 @@ import '../widgets/avatar.dart';
 import '../modeles/membre.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
+/// Widget représentant un élément de notification dans la liste des notifications.
 class WidgetNotif extends StatelessWidget {
+  /// La notification à afficher.
   final Notif notification;
   const WidgetNotif({super.key, required this.notification});
 
   @override
   Widget build(BuildContext context) {
     return StreamBuilder<DocumentSnapshot>(
+      // Récupère les informations de l'expéditeur de la notification
       stream: ServiceFirestore().specificMember(notification.from),
       builder: (context, snapshot) {
         if (!snapshot.hasData || snapshot.data?.data() == null) return const SizedBox();
@@ -25,9 +28,11 @@ class WidgetNotif extends StatelessWidget {
         );
 
         return Container(
+          // Met en évidence les notifications non lues par une couleur de fond
           color: notification.read ? Colors.transparent : Colors.brown.shade50,
           child: ListTile(
             onTap: () {
+              // Marque la notification comme lue lors du clic
               ServiceFirestore().markRead(notification.reference);
             },
             leading: Avatar(radius: 20, url: member.profilePicture),

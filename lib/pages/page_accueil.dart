@@ -5,7 +5,7 @@ import '../modeles/post.dart';
 import '../widgets/widget_post.dart';
 import '../widgets/widget_vide.dart';
 
-// Etape 5.2 : Création de la page d'accueil (affichage de tous les posts)
+/// Page d'accueil affichant le flux de toutes les publications du réseau social.
 class PageAccueil extends StatelessWidget {
   const PageAccueil({super.key});
 
@@ -16,15 +16,18 @@ class PageAccueil extends StatelessWidget {
         title: const Text("Cht'i Face Bouc"),
       ),
       body: StreamBuilder<QuerySnapshot>(
+        // Écoute en temps réel de toutes les publications via Firestore
         stream: ServiceFirestore().allPosts(),
         builder: (context, snapshot) {
           if (snapshot.hasData) {
             final docs = snapshot.data!.docs;
+            // Affiche un widget spécifique si aucune publication n'est trouvée
             if (docs.isEmpty) return const EmptyBody();
             
             return ListView.builder(
               itemCount: docs.length,
               itemBuilder: (context, index) {
+                // Conversion du document Firestore en objet Post
                 final Post post = Post(
                   reference: docs[index].reference,
                   id: docs[index].id,
@@ -34,6 +37,7 @@ class PageAccueil extends StatelessWidget {
               },
             );
           } else {
+            // Chargement en cours
             return const Center(child: CircularProgressIndicator());
           }
         },

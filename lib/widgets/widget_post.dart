@@ -7,7 +7,10 @@ import '../modeles/donnees.dart';
 import 'entete_membre.dart';
 import 'contenu_post.dart';
 
+/// Widget principal affichant une publication sous forme de carte.
+/// Gère les interactions (Like, Commenter) et l'affichage complet du contenu.
 class WidgetPost extends StatelessWidget {
+  /// La publication à afficher.
   final Post post;
   const WidgetPost({super.key, required this.post});
 
@@ -20,18 +23,18 @@ class WidgetPost extends StatelessWidget {
         padding: const EdgeInsets.all(5),
         child: Column(
           children: [
-            // Row avec Avatar, Nom et Date
+            // Section En-tête (Avatar + Nom + Date)
             Padding(
               padding: const EdgeInsets.all(8.0),
               child: EnteteMembre(memberId: post.memberId, date: post.date),
             ),
             
-            // Etape d'organisation : Utilisation de ContenuPost
+            // Section Contenu (Image + Texte)
             ContenuPost(post: post),
 
             const Divider(),
 
-            // Boutons Like et Commentaire
+            // Barre d'actions (Likes et Commentaires)
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
@@ -41,6 +44,7 @@ class WidgetPost extends StatelessWidget {
                       onPressed: () {
                         final myId = ServiceAuthentification().myId;
                         if (myId != null) {
+                          // Gère l'ajout/suppression d'un Like
                           ServiceFirestore().addLike(memberID: myId, post: post);
                         }
                       }, 
@@ -57,6 +61,7 @@ class WidgetPost extends StatelessWidget {
                 Text("${post.likes.length} Likes"),
                 IconButton(
                   onPressed: () {
+                    // Navigation vers le détail de la publication
                     Navigator.push(context, MaterialPageRoute(
                       builder: (context) => PageDetailPost(post: post)
                     ));

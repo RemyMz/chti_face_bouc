@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import '../modeles/post.dart';
 
+/// Widget responsable de l'affichage du contenu d'une publication (image et texte).
 class ContenuPost extends StatelessWidget {
+  /// La publication dont le contenu doit être affiché.
   final Post post;
   const ContenuPost({super.key, required this.post});
 
@@ -9,7 +11,7 @@ class ContenuPost extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        // Image du post (si présente)
+        // Affiche l'image de la publication si elle existe
         if (post.imageUrl.isNotEmpty) ...[
           const SizedBox(height: 5),
           ClipRRect(
@@ -18,7 +20,7 @@ class ContenuPost extends StatelessWidget {
           ),
         ],
 
-        // Texte du post
+        // Affiche le texte de la publication
         Padding(
           padding: const EdgeInsets.all(10.0),
           child: Align(

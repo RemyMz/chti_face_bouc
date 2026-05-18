@@ -6,8 +6,12 @@ import '../modeles/membre.dart';
 import '../services_firebase/service_firestore.dart';
 import '../modeles/donnees.dart';
 
+/// Page permettant à l'utilisateur de rédiger et publier une nouvelle publication.
 class PageEcrirePost extends StatefulWidget {
+  /// Le membre qui écrit le post.
   final Membre member;
+  
+  /// Callback appelé une fois le post envoyé (généralement pour rediriger vers l'accueil).
   final Function(int) onPostSent;
 
   const PageEcrirePost({super.key, required this.member, required this.onPostSent});
@@ -17,12 +21,10 @@ class PageEcrirePost extends StatefulWidget {
 }
 
 class _PageEcrirePostState extends State<PageEcrirePost> {
-  // a) Les variables
   late TextEditingController textController;
   File? imageFile;
   Uint8List? webImage;
 
-  // b) Les méthodes initState() et dispose()
   @override
   void initState() {
     super.initState();
@@ -35,16 +37,18 @@ class _PageEcrirePostState extends State<PageEcrirePost> {
     super.dispose();
   }
 
-  // e) La fonction _takePic
+  /// Ouvre la source sélectionnée (galerie ou caméra) pour choisir une image.
   void _takePic(ImageSource source) async {
     final XFile? xfile = await ImagePicker().pickImage(source: source, maxWidth: 500);
     if (xfile != null) {
       if (kIsWeb) {
+        // Gestion spécifique pour le Web (Uint8List)
         final bytes = await xfile.readAsBytes();
         setState(() {
           webImage = bytes;
         });
       } else {
+        // Gestion pour Mobile (File)
         setState(() {
           imageFile = File(xfile.path);
         });
@@ -52,7 +56,7 @@ class _PageEcrirePostState extends State<PageEcrirePost> {
     }
   }
 
-  // d) La fonction _sendPost
+  /// Valide et envoie la publication vers Firestore et Storage.
   void _sendPost() async {
     FocusScope.of(context).requestFocus(FocusNode());
     if (textController.text.isEmpty) return;
@@ -64,7 +68,7 @@ class _PageEcrirePostState extends State<PageEcrirePost> {
       webImage
     );
 
-    // Retour au flux (index 0)
+    // Retour au flux (index 0 de la navigation)
     widget.onPostSent(0);
   }
 
@@ -99,6 +103,7 @@ class _PageEcrirePostState extends State<PageEcrirePost> {
                         border: InputBorder.none
                       ),
                     ),
+                    // Affichage de l'aperçu de l'image sélectionnée
                     if (webImage != null || imageFile != null) ...[
                       const SizedBox(height: 10),
                       if (kIsWeb && webImage != null)

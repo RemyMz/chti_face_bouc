@@ -4,20 +4,24 @@ import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import '../services_firebase/service_firestore.dart';
 
+/// Bouton permettant de déclencher la sélection d'une image (profil ou couverture).
 class BoutonCamera extends StatelessWidget {
-  final String type; // profilePictureKey ou coverPictureKey
-  final String id;   // UID du membre
+  /// Type d'image à mettre à jour (ex: profilePictureKey ou coverPictureKey).
+  final String type;
+  
+  /// Identifiant unique du membre concerné.
+  final String id;
 
   const BoutonCamera({super.key, required this.type, required this.id});
 
-  // Méthode _takePicture demandée à l'étape 6.6
+  /// Gère l'acquisition de l'image via la galerie et lance la mise à jour sur Firebase.
   void _takePicture() async {
     final ImagePicker picker = ImagePicker();
-    // Acquisition de l'image à partir de la galerie (Etape 6.6)
     final XFile? xfile = await picker.pickImage(source: ImageSource.gallery, maxWidth: 500);
     
     if (xfile != null) {
       if (kIsWeb) {
+        // Traitement spécifique pour le Web
         final bytes = await xfile.readAsBytes();
         ServiceFirestore().updateImage(
           webBytes: bytes,
@@ -26,8 +30,8 @@ class BoutonCamera extends StatelessWidget {
           imageName: type
         );
       } else {
+        // Traitement pour Mobile
         File file = File(xfile.path);
-        // Appel du service pour stockage et mise à jour
         ServiceFirestore().updateImage(
           file: file, 
           folder: "members", 

@@ -6,7 +6,9 @@ import '../widgets/widget_notif.dart';
 import '../widgets/widget_vide.dart';
 import '../modeles/membre.dart';
 
+/// Page affichant les notifications reçues par l'utilisateur (likes, commentaires, etc.).
 class PageNotif extends StatelessWidget {
+  /// Le membre pour lequel on affiche les notifications.
   final Membre member;
   const PageNotif({super.key, required this.member});
 
@@ -17,6 +19,7 @@ class PageNotif extends StatelessWidget {
         title: const Text("Mes notifications"),
       ),
       body: StreamBuilder<QuerySnapshot>(
+        // Récupère les notifications filtrées pour l'utilisateur actuel
         stream: ServiceFirestore().notificationForUser(member.id),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
@@ -30,6 +33,7 @@ class PageNotif extends StatelessWidget {
             itemCount: docs.length,
             separatorBuilder: (context, index) => const Divider(height: 1),
             itemBuilder: (context, index) {
+              // Conversion en objet Notif pour un affichage typé
               final Notif notification = Notif(
                 reference: docs[index].reference, 
                 id: docs[index].id, 
