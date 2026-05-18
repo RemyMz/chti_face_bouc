@@ -5,14 +5,14 @@ import 'page_navigation.dart';
 
 /// Page racine de l'application gérant l'aiguillage automatique.
 /// Elle détermine si l'utilisateur doit voir la page d'authentification ou l'application principale.
-class PageApplicationl extends StatefulWidget {
-  const PageApplicationl({super.key});
+class PageApplication extends StatefulWidget {
+  const PageApplication({super.key});
 
   @override
-  State<PageApplicationl> createState() => _PageApplicationlState();
+  State<PageApplication> createState() => _PageApplicationState();
 }
 
-class _PageApplicationlState extends State<PageApplicationl> {
+class _PageApplicationState extends State<PageApplication> {
   @override
   Widget build(BuildContext context) {
     return StreamBuilder<User?>(

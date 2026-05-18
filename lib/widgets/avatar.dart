@@ -14,12 +14,41 @@ class Avatar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     bool hasImage = (url != null && url!.isNotEmpty);
-    return CircleAvatar(
-      radius: radius,
-      backgroundColor: Colors.brown.shade100,
-      backgroundImage: hasImage ? NetworkImage(url!) : null,
-      // Affiche le logo Flutter en guise de placeholder
-      child: hasImage ? null : FlutterLogo(size: radius),
+    
+    return Hero(
+      tag: url ?? "avatar_${DateTime.now().millisecondsSinceEpoch}",
+      child: Container(
+        decoration: BoxDecoration(
+          shape: BoxShape.circle,
+          border: Border.all(color: Theme.of(context).cardColor, width: 3),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withOpacity(0.1),
+              blurRadius: 12,
+              offset: const Offset(0, 4),
+            ),
+          ],
+        ),
+        child: CircleAvatar(
+          radius: radius,
+          backgroundColor: Theme.of(context).colorScheme.primaryContainer,
+          child: ClipOval(
+            child: hasImage 
+              ? Image.network(
+                  url!,
+                  width: radius * 2,
+                  height: radius * 2,
+                  fit: BoxFit.cover,
+                  errorBuilder: (context, error, stackTrace) => Icon(Icons.person, size: radius, color: Theme.of(context).colorScheme.onPrimaryContainer),
+                  loadingBuilder: (context, child, loadingProgress) {
+                    if (loadingProgress == null) return child;
+                    return const Center(child: CircularProgressIndicator(strokeWidth: 2));
+                  },
+                )
+              : Icon(Icons.person, size: radius, color: Theme.of(context).colorScheme.onPrimaryContainer),
+          ),
+        ),
+      ),
     );
   }
 }

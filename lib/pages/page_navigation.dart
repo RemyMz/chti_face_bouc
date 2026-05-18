@@ -1,3 +1,4 @@
+import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import '../services_firebase/service_authentification.dart';
@@ -10,8 +11,7 @@ import 'page_ecrire_post.dart';
 import 'page_profil.dart';
 import 'page_notif.dart';
 
-/// Page principale gérant la navigation par onglets (BottomNavigationBar).
-/// Elle charge les données de l'utilisateur connecté et orchestre l'affichage des différentes sections.
+/// Page principale gérant la navigation par onglets avec effets de flou (Glassmorphism).
 class PageNavigation extends StatefulWidget {
   const PageNavigation({super.key});
 
@@ -20,24 +20,18 @@ class PageNavigation extends StatefulWidget {
 }
 
 class _PageNavigationState extends State<PageNavigation> {
-  /// Index de l'onglet actuellement sélectionné.
   int index = 0;
 
   @override
   Widget build(BuildContext context) {
     final memberId = ServiceAuthentification().myId;
-    
-    // Si l'utilisateur n'est pas identifié, on affiche un écran vide sécurisé
     if (memberId == null) return const EmptyScaffold();
 
     return StreamBuilder<DocumentSnapshot>(
-      // Récupère les informations détaillées du membre connecté
       stream: ServiceFirestore().specificMember(memberId),
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
-          return const Scaffold(
-            body: Center(child: CircularProgressIndicator()),
-          );
+          return const Scaffold(body: Center(child: CircularProgressIndicator()));
         }
         if (snapshot.hasData && snapshot.data?.data() != null) {
           final data = snapshot.data!;
@@ -47,40 +41,58 @@ class _PageNavigationState extends State<PageNavigation> {
             map: data.data() as Map<String, dynamic>
           );
 
-          // Liste des pages disponibles dans la navigation
+          List<String> titles = ["Fil d'actualité", "La Communauté", "Nouvelle Publication", "Notifications", "Mon Profil"];
           List<Widget> bodies = [
             const PageAccueil(),
             const PageMembres(),
-            PageEcrirePost(member: member, onPostSent: (newIndex) {
-              // Callback pour changer d'onglet après publication d'un post
-              setState(() {
-                index = newIndex;
-              });
-            }),
+            PageEcrirePost(member: member, onPostSent: (newIndex) => setState(() => index = newIndex)),
             PageNotif(member: member),
             PageProfil(member: member),
           ];
 
           return Scaffold(
-            appBar: AppBar(
-              title: Text(member.fullName),
+            extendBody: true,
+            extendBodyBehindAppBar: true,
+            appBar: index == 4 ? null : PreferredSize(
+              preferredSize: const Size.fromHeight(60),
+              child: ClipRRect(
+                child: BackdropFilter(
+                  filter: ImageFilter.blur(sigmaX: 15, sigmaY: 15),
+                  child: AppBar(
+                    title: Text(titles[index], style: const TextStyle(fontWeight: FontWeight.bold)),
+                    centerTitle: true,
+                    elevation: 0,
+                    backgroundColor: Theme.of(context).scaffoldBackgroundColor.withOpacity(0.7),
+                  ),
+                ),
+              ),
             ),
-            body: bodies[index],
-            bottomNavigationBar: NavigationBar(
-              labelBehavior: NavigationDestinationLabelBehavior.onlyShowSelected,
-              selectedIndex: index,
-              onDestinationSelected: (int newValue) {
-                setState(() {
-                  index = newValue;
-                });
-              },
-              destinations: const [
-                NavigationDestination(icon: Icon(Icons.home), label: "Accueil"),
-                NavigationDestination(icon: Icon(Icons.group), label: "Membres"),
-                NavigationDestination(icon: Icon(Icons.border_color), label: "Ecrire"),
-                NavigationDestination(icon: Icon(Icons.notifications), label: "Notification"),
-                NavigationDestination(icon: Icon(Icons.person), label: "Profil"),
-              ],
+            body: IndexedStack(index: index, children: bodies),
+            bottomNavigationBar: ClipRRect(
+              child: BackdropFilter(
+                filter: ImageFilter.blur(sigmaX: 20, sigmaY: 20),
+                child: Container(
+                  decoration: BoxDecoration(
+                    color: Theme.of(context).cardColor.withOpacity(0.6),
+                    border: Border(top: BorderSide(color: Colors.white.withOpacity(0.1), width: 0.5)),
+                  ),
+                  child: NavigationBar(
+                    elevation: 0,
+                    backgroundColor: Colors.transparent,
+                    indicatorColor: Theme.of(context).primaryColor.withOpacity(0.15),
+                    labelBehavior: NavigationDestinationLabelBehavior.onlyShowSelected,
+                    selectedIndex: index,
+                    onDestinationSelected: (int newValue) => setState(() => index = newValue),
+                    destinations: const [
+                      NavigationDestination(icon: Icon(Icons.home_outlined), selectedIcon: Icon(Icons.home_rounded), label: "Accueil"),
+                      NavigationDestination(icon: Icon(Icons.group_outlined), selectedIcon: Icon(Icons.group_rounded), label: "Membres"),
+                      NavigationDestination(icon: Icon(Icons.add_circle_outline_rounded), selectedIcon: Icon(Icons.add_circle_rounded), label: "Ecrire"),
+                      NavigationDestination(icon: Icon(Icons.notifications_none_rounded), selectedIcon: Icon(Icons.notifications_rounded), label: "Notification"),
+                      NavigationDestination(icon: Icon(Icons.person_outline_rounded), selectedIcon: Icon(Icons.person_rounded), label: "Profil"),
+                    ],
+                  ),
+                ),
+              ),
             ),
           );
         } else {

@@ -15,9 +15,6 @@ class PageNotif extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text("Mes notifications"),
-      ),
       body: StreamBuilder<QuerySnapshot>(
         // Récupère les notifications filtrées pour l'utilisateur actuel
         stream: ServiceFirestore().notificationForUser(member.id),
@@ -30,6 +27,7 @@ class PageNotif extends StatelessWidget {
           }
           final docs = snapshot.data!.docs;
           return ListView.separated(
+            padding: const EdgeInsets.only(top: 100, bottom: 100),
             itemCount: docs.length,
             separatorBuilder: (context, index) => const Divider(height: 1),
             itemBuilder: (context, index) {

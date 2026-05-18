@@ -53,10 +53,11 @@ class ServiceFirestore {
 
   /// Crée un nouveau post avec texte et potentiellement une image.
   /// Gère la différence entre les plateformes Web (Uint8List) et Mobile (File).
-  Future<void> createPost(Membre member, String text, File? image, Uint8List? webImage) async {
+  Future<void> createPost(Membre member, String text, String location, dynamic image, Uint8List? webImage) async {
     Map<String, dynamic> data = {
       memberIdKey: member.id,
       textKey: text,
+      locationKey: location,
       dateKey: DateTime.now().millisecondsSinceEpoch,
       likesKey: [],
     };
@@ -82,6 +83,39 @@ class ServiceFirestore {
       );
       await ref.update({postImageKey: url});
     }
+  }
+
+  /// Met à jour le contenu d'un post.
+  Future<void> updatePost({required Post post, required String text, required String location}) async {
+    await post.reference.update({
+      textKey: text,
+      locationKey: location,
+    });
+  }
+
+  /// Supprime un post, son image associée et ses commentaires.
+  Future<void> deletePost(Post post) async {
+    // 1. Suppression de l'image si elle existe
+    if (post.imageUrl.isNotEmpty) {
+      try {
+        await ServiceStorage().deleteImage(
+          folder: "posts", 
+          memberId: post.memberId, 
+          imageName: post.id
+        );
+      } catch (e) {
+        debugPrint("Erreur lors de la suppression de l'image : $e");
+      }
+    }
+
+    // 2. Suppression des commentaires (sous-collection)
+    final comments = await post.reference.collection(commentCollectionKey).get();
+    for (var doc in comments.docs) {
+      await doc.reference.delete();
+    }
+
+    // 3. Suppression du document post lui-même
+    await post.reference.delete();
   }
 
   /// Gère l'ajout ou le retrait d'un "Like" sur un post.

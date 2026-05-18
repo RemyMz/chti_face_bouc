@@ -35,4 +35,13 @@ class ServiceStorage {
     String imageUrl = await snapshot.ref.getDownloadURL();
     return imageUrl;
   }
+
+  /// Supprime une image du stockage.
+  /// [folder] : Le dossier où se trouve l'image.
+  /// [memberId] : L'identifiant du membre propriétaire.
+  /// [imageName] : Le nom de l'image.
+  Future<void> deleteImage({required String folder, required String memberId, required String imageName}) async {
+    Reference reference = ref.child(folder).child(memberId).child(imageName);
+    await reference.delete();
+  }
 }

@@ -23,6 +23,9 @@ class Post {
   /// URL de l'image associée à la publication, si elle existe.
   String get imageUrl => map[postImageKey] ?? "";
   
+  /// Localisation de la publication (ville, lieu).
+  String get location => map[locationKey] ?? "";
+  
   /// Date de création au format timestamp (millisecondes).
   int get date => map[dateKey] ?? 0;
   

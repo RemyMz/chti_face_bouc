@@ -49,5 +49,9 @@
 	<string>Cette application a besoin d'accéder à votre galerie pour vous permettre de choisir une photo de profil.</string>
 	<key>NSCameraUsageDescription</key>
 	<string>Cette application a besoin d'accéder à votre appareil photo pour vous permettre de prendre une photo de profil.</string>
+	<key>NSLocationWhenInUseUsageDescription</key>
+	<string>Chti Face Bouc a besoin de ta position pour savoir d'où qu'té !</string>
+	<key>NSLocationAlwaysUsageDescription</key>
+	<string>Chti Face Bouc a besoin de ta position pour savoir d'où qu'té !</string>
 </dict>
 </plist>

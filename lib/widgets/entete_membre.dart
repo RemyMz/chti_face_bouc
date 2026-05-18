@@ -14,7 +14,10 @@ class EnteteMembre extends StatelessWidget {
   /// Date associée (publication ou commentaire) au format timestamp.
   final int date;
 
-  const EnteteMembre({super.key, required this.memberId, required this.date});
+  /// Localisation optionnelle (pour les posts).
+  final String? location;
+
+  const EnteteMembre({super.key, required this.memberId, required this.date, this.location});
 
   @override
   Widget build(BuildContext context) {
@@ -39,10 +42,22 @@ class EnteteMembre extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(member.fullName, style: const TextStyle(fontWeight: FontWeight.bold)),
-                Text(
-                  // Utilise l'utilitaire de formatage pour une date lisible
-                  FormatageDate().formatted(date), 
-                  style: const TextStyle(fontSize: 10, color: Colors.grey)
+                Row(
+                  children: [
+                    Text(
+                      // Utilise l'utilitaire de formatage pour une date lisible
+                      FormatageDate().formatted(date), 
+                      style: const TextStyle(fontSize: 10, color: Colors.grey)
+                    ),
+                    if (location != null && location!.isNotEmpty) ...[
+                      const SizedBox(width: 5),
+                      const Icon(Icons.location_on, size: 10, color: Colors.grey),
+                      Text(
+                        " à $location", 
+                        style: const TextStyle(fontSize: 10, color: Colors.grey, fontStyle: FontStyle.italic)
+                      ),
+                    ],
+                  ],
                 ),
               ],
             )

@@ -18,9 +18,6 @@ class _PageMembresState extends State<PageMembres> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text("Les membres"),
-      ),
       body: StreamBuilder<QuerySnapshot>(
         // Écoute en temps réel de tous les utilisateurs inscrits
         stream: ServiceFirestore().allMembers(),
@@ -30,6 +27,7 @@ class _PageMembresState extends State<PageMembres> {
             if (docs.isEmpty) return const EmptyBody();
 
             return ListView.separated(
+              padding: const EdgeInsets.only(top: 100, bottom: 100),
               itemCount: docs.length,
               separatorBuilder: (context, index) => const Divider(),
               itemBuilder: (context, index) {

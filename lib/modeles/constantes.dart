@@ -32,6 +32,8 @@ String textKey = "text";
 String postImageKey = "image";
 /// Clé pour la date.
 String dateKey = "date";
+/// Clé pour la localisation (ville/lieu).
+String locationKey = "location";
 /// Clé pour la liste des likes.
 String likesKey = "likes";
 

@@ -2,6 +2,8 @@ import 'dart:io';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:geolocator/geolocator.dart';
+import 'package:geocoding/geocoding.dart';
 import '../modeles/membre.dart';
 import '../services_firebase/service_firestore.dart';
 import '../modeles/donnees.dart';
@@ -22,18 +24,21 @@ class PageEcrirePost extends StatefulWidget {
 
 class _PageEcrirePostState extends State<PageEcrirePost> {
   late TextEditingController textController;
-  File? imageFile;
+  late TextEditingController locationController;
+  dynamic imageFile; // Utilisation de dynamic pour la compatibilité Web/Mobile
   Uint8List? webImage;
 
   @override
   void initState() {
     super.initState();
     textController = TextEditingController();
+    locationController = TextEditingController();
   }
 
   @override
   void dispose() {
     textController.dispose();
+    locationController.dispose();
     super.dispose();
   }
 
@@ -56,6 +61,57 @@ class _PageEcrirePostState extends State<PageEcrirePost> {
     }
   }
 
+  /// Récupère la position actuelle de l'appareil et extrait le nom de la ville.
+  void _getCurrentLocation() async {
+    bool serviceEnabled;
+    LocationPermission permission;
+
+    // Vérifie si le service de localisation est activé
+    serviceEnabled = await Geolocator.isLocationServiceEnabled();
+    if (!serviceEnabled) return;
+
+    // Vérifie et demande les permissions si nécessaire
+    permission = await Geolocator.checkPermission();
+    if (permission == LocationPermission.denied) {
+      permission = await Geolocator.requestPermission();
+      if (permission == LocationPermission.denied) return;
+    }
+    
+    if (permission == LocationPermission.deniedForever) return;
+
+    try {
+      // Configuration pour une précision élevée
+      LocationSettings locationSettings = const LocationSettings(
+        accuracy: LocationAccuracy.high,
+        distanceFilter: 10,
+      );
+      
+      // Récupération de la position GPS avec les réglages
+      Position position = await Geolocator.getCurrentPosition(
+        locationSettings: locationSettings
+      );
+      
+      // Reverse geocoding avec gestion d'erreur spécifique
+      try {
+        List<Placemark> placemarks = await placemarkFromCoordinates(position.latitude, position.longitude);
+        if (placemarks.isNotEmpty) {
+          Placemark place = placemarks[0];
+          setState(() {
+            locationController.text = place.locality ?? place.subAdministrativeArea ?? place.name ?? "";
+          });
+        }
+      } catch (geocodingError) {
+        // Si le geocoding échoue (ex: pas de service), on met au moins les coordonnées ou on laisse vide
+        debugPrint("Erreur Geocoding : $geocodingError");
+        setState(() {
+          locationController.text = "${position.latitude.toStringAsFixed(2)}, ${position.longitude.toStringAsFixed(2)}";
+        });
+      }
+    } catch (e) {
+      debugPrint("Erreur lors de la récupération de la position : $e");
+    }
+  }
+
   /// Valide et envoie la publication vers Firestore et Storage.
   void _sendPost() async {
     FocusScope.of(context).requestFocus(FocusNode());
@@ -64,6 +120,7 @@ class _PageEcrirePostState extends State<PageEcrirePost> {
     await ServiceFirestore().createPost(
       widget.member, 
       textController.text, 
+      locationController.text,
       imageFile,
       webImage
     );
@@ -75,10 +132,8 @@ class _PageEcrirePostState extends State<PageEcrirePost> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text("Chti Face Bouc"),
-      ),
       body: SingleChildScrollView(
+        padding: const EdgeInsets.only(top: 100, bottom: 100),
         child: Column(
           children: [
             Card(
@@ -103,6 +158,16 @@ class _PageEcrirePostState extends State<PageEcrirePost> {
                         border: InputBorder.none
                       ),
                     ),
+                    TextField(
+                      controller: locationController,
+                      decoration: const InputDecoration(
+                        hintText: "Localisation (Ville, lieu...)",
+                        prefixIcon: Icon(Icons.location_on, size: 16),
+                        border: InputBorder.none,
+                        hintStyle: TextStyle(fontSize: 14)
+                      ),
+                    ),
+                    const Divider(),
                     // Affichage de l'aperçu de l'image sélectionnée
                     if (webImage != null || imageFile != null) ...[
                       const SizedBox(height: 10),
@@ -121,6 +186,10 @@ class _PageEcrirePostState extends State<PageEcrirePost> {
                         IconButton(
                           onPressed: () => _takePic(ImageSource.camera), 
                           icon: const Icon(Icons.camera_alt)
+                        ),
+                        IconButton(
+                          onPressed: _getCurrentLocation, 
+                          icon: const Icon(Icons.my_location, color: Colors.blue)
                         ),
                       ],
                     ),

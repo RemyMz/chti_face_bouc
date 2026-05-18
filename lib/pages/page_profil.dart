@@ -10,10 +10,7 @@ import '../widgets/bouton_camera.dart';
 import '../widgets/widget_post.dart';
 import 'page_modifier_profil.dart';
 
-/// Page de profil d'un membre.
-/// Permet de voir les informations, les images (couverture/profil) et les publications du membre.
 class PageProfil extends StatefulWidget {
-  /// Le membre dont on affiche le profil.
   final Membre member;
   const PageProfil({super.key, required this.member});
 
@@ -24,13 +21,14 @@ class PageProfil extends StatefulWidget {
 class _PageProfilState extends State<PageProfil> {
   @override
   Widget build(BuildContext context) {
-    // Vérifie si le profil affiché est celui de l'utilisateur connecté
     bool isMe = ServiceAuthentification().isMe(widget.member.id);
 
     return StreamBuilder<DocumentSnapshot>(
       stream: ServiceFirestore().specificMember(widget.member.id),
       builder: (context, memberSnapshot) {
-        if (!memberSnapshot.hasData || memberSnapshot.data?.data() == null) return const Center(child: CircularProgressIndicator());
+        if (!memberSnapshot.hasData || memberSnapshot.data?.data() == null) {
+          return const Scaffold(body: Center(child: CircularProgressIndicator()));
+        }
         
         final data = memberSnapshot.data!;
         final Membre member = Membre(
@@ -40,97 +38,114 @@ class _PageProfilState extends State<PageProfil> {
         );
 
         return StreamBuilder<QuerySnapshot>(
-          // Récupère uniquement les publications de ce membre
           stream: ServiceFirestore().postForMember(member.id),
           builder: (context, postSnapshot) {
-            if (postSnapshot.hasError) {
-              return Scaffold(
-                body: Center(
-                  child: Text("Erreur : ${postSnapshot.error.toString()}", 
-                        style: const TextStyle(color: Colors.red)),
-                ),
-              );
-            }
-            
             final docs = postSnapshot.data?.docs ?? [];
             
             return Scaffold(
-              body: ListView.builder(
-                itemCount: docs.length + 1, // +1 pour l'en-tête (profil)
-                itemBuilder: (context, index) {
-                  if (index == 0) {
-                    // Section en-tête : Couverture, Avatar, Infos
-                    return Column(
+              body: CustomScrollView(
+                slivers: [
+                  // SliverAppBar avec effet Parallaxe
+                  SliverAppBar(
+                    expandedHeight: 300,
+                    pinned: true,
+                    stretch: true,
+                    flexibleSpace: FlexibleSpaceBar(
+                      title: Text(member.fullName, 
+                        style: const TextStyle(
+                          color: Colors.white,
+                          fontWeight: FontWeight.bold,
+                          shadows: [Shadow(blurRadius: 10, color: Colors.black45)]
+                        )
+                      ),
+                      background: Stack(
+                        fit: StackFit.expand,
+                        children: [
+                          if (member.coverPicture.isNotEmpty)
+                            Image.network(member.coverPicture, fit: BoxFit.cover)
+                          else
+                            Container(color: Theme.of(context).colorScheme.primary),
+                          const DecoratedBox(
+                            decoration: BoxDecoration(
+                              gradient: LinearGradient(
+                                begin: Alignment.topCenter,
+                                end: Alignment.bottomCenter,
+                                colors: [Colors.transparent, Colors.black54],
+                              ),
+                            ),
+                          ),
+                          if (isMe) Positioned(
+                            top: 50,
+                            right: 10,
+                            child: BoutonCamera(type: coverPictureKey, id: member.id),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+
+                  // Header Infos Profil
+                  SliverToBoxAdapter(
+                    child: Column(
                       children: [
-                        Stack(
-                          alignment: Alignment.bottomCenter,
-                          clipBehavior: Clip.none,
-                          children: [
-                            // Espace réservé pour définir la hauteur totale de l'en-tête (200 couverture + 60 débordement avatar)
-                            const SizedBox(height: 260, width: double.infinity),
-                            // Image de couverture
-                            Positioned(
-                              top: 0,
-                              left: 0,
-                              right: 0,
-                              child: Container(
-                                height: 200,
-                                decoration: BoxDecoration(
-                                  color: Theme.of(context).colorScheme.primaryContainer,
-                                  image: member.coverPicture.isNotEmpty 
-                                    ? DecorationImage(image: NetworkImage(member.coverPicture), fit: BoxFit.cover) 
-                                    : null,
-                                ),
-                                child: isMe ? Container(
-                                  alignment: Alignment.bottomRight,
-                                  child: BoutonCamera(type: coverPictureKey, id: member.id),
-                                ) : null,
-                              ),
-                            ),
-                            // Photo de profil positionnée pour chevaucher la couverture
-                            Positioned(
-                              bottom: 0,
-                              child: Stack(
-                                alignment: Alignment.bottomRight,
-                                children: [
-                                  Avatar(radius: 60, url: member.profilePicture),
-                                  if (isMe) BoutonCamera(type: profilePictureKey, id: member.id),
-                                ],
-                              ),
-                            ),
-                          ],
+                        Transform.translate(
+                          offset: const Offset(0, -50),
+                          child: Stack(
+                            alignment: Alignment.bottomRight,
+                            children: [
+                              Avatar(radius: 60, url: member.profilePicture),
+                              if (isMe) BoutonCamera(type: profilePictureKey, id: member.id),
+                            ],
+                          ),
                         ),
-                        const SizedBox(height: 10),
-                        Text(member.fullName, style: Theme.of(context).textTheme.headlineMedium),
-                        const Divider(),
                         Padding(
-                          padding: const EdgeInsets.all(15),
-                          child: Text(member.description.isEmpty ? "Pas encore de description..." : member.description),
+                          padding: const EdgeInsets.symmetric(horizontal: 20),
+                          child: Column(
+                            children: [
+                              Text(
+                                member.description.isEmpty ? "Pas encore de description..." : member.description,
+                                textAlign: TextAlign.center,
+                                style: Theme.of(context).textTheme.bodyLarge,
+                              ),
+                              const SizedBox(height: 16),
+                              if (isMe) OutlinedButton.icon(
+                                onPressed: () => Navigator.push(context, MaterialPageRoute(
+                                  builder: (context) => PageModifierProfil(member: member)
+                                )), 
+                                icon: const Icon(Icons.edit_rounded),
+                                label: const Text("Modifier le profil"),
+                                style: OutlinedButton.styleFrom(
+                                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                                ),
+                              ),
+                            ],
+                          ),
                         ),
-                        // Bouton d'édition visible uniquement sur son propre profil
-                        if (isMe) OutlinedButton(
-                          onPressed: () {
-                            Navigator.push(context, MaterialPageRoute(
-                              builder: (context) => PageModifierProfil(member: member)
-                            ));
-                          }, 
-                          child: const Text("Modifier le profil")
+                        const Padding(
+                          padding: EdgeInsets.symmetric(vertical: 20),
+                          child: Divider(indent: 50, endIndent: 50),
                         ),
-                        const SizedBox(height: 20),
-                        const Divider(thickness: 2),
                       ],
-                    );
-                  } else {
-                    // Liste des publications du membre
-                    final postDoc = docs[index - 1];
-                    final Post post = Post(
-                      reference: postDoc.reference,
-                      id: postDoc.id,
-                      map: postDoc.data() as Map<String, dynamic>
-                    );
-                    return WidgetPost(post: post);
-                  }
-                },
+                    ),
+                  ),
+
+                  // Liste des publications
+                  SliverList(
+                    delegate: SliverChildBuilderDelegate(
+                      (context, index) {
+                        final postDoc = docs[index];
+                        final Post post = Post(
+                          reference: postDoc.reference,
+                          id: postDoc.id,
+                          map: postDoc.data() as Map<String, dynamic>
+                        );
+                        return WidgetPost(post: post);
+                      },
+                      childCount: docs.length,
+                    ),
+                  ),
+                  const SliverToBoxAdapter(child: SizedBox(height: 100)),
+                ],
               ),
             );
           },
