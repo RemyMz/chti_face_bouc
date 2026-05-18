@@ -16,9 +16,6 @@
 *.iws
 .idea/
 
-# The Python script I created
-extract_pdf.py
-
 # Flutter/Dart/Pub related
 **/doc/api/
 **/ios/Flutter/.last_build_id
