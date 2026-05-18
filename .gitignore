@@ -1,0 +1,61 @@
+# Miscellaneous
+*.class
+*.log
+*.pyc
+*.swp
+.DS_Store
+.atom/
+.buildlog/
+.history
+.svn/
+.vscode/
+
+# IntelliJ related
+*.iml
+*.ipr
+*.iws
+.idea/
+
+# The Python script I created
+extract_pdf.py
+
+# Flutter/Dart/Pub related
+**/doc/api/
+**/ios/Flutter/.last_build_id
+**/ios/Flutter/Ephemeral/
+**/ios/Flutter/Generated.xcconfig
+**/ios/Flutter/flutter_export_environment.sh
+**/ios/Flutter/flutter_lldb_helper.py
+**/ios/Flutter/flutter_lldinit
+**/lib/generated_plugin_registrant.dart
+**/pubspec.lock
+.dart_tool/
+.flutter-plugins
+.flutter-plugins-dependencies
+.packages
+.pub-cache/
+.pub/
+/build/
+
+# Web related
+lib/generated_plugin_registrant.dart
+
+# Symbolication related
+app.*.symbols
+
+# Obfuscation related
+app.*.map.json
+
+# Android Studio will change this file, so it's a good idea to ignore it.
+android/local.properties
+ios/Flutter/Generated.xcconfig
+ios/Flutter/flutter_export_environment.sh
+/android/key.properties
+/android/app/src/main/res/values/strings.xml
+
+# Exceptions to above rules.
+!/ios/Flutter/AppFrameworkInfo.plist
+!/ios/Runner/Info.plist
+!/ios/Runner/Base.lproj/LaunchScreen.storyboard
+!/ios/Runner/Base.lproj/Main.storyboard
+!/android/app/src/main/res/values/styles.xml
