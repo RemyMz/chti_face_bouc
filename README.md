@@ -1,55 +1,49 @@
-# Chti Face Bouc 👨‍🌾💻
+# Chti Face Bouc 👨‍🌾💻 - Édition Premium
 
-**Chti Face Bouc** est une application mobile sociale développée avec **Flutter** et **Firebase**, conçue pour connecter les gens avec une touche locale. Le projet a été réalisé dans le cadre du module de développement mobile à l'IMT.
+**Chti Face Bouc** est une application sociale moderne et fluide développée avec **Flutter** et **Firebase**. Conçue à l'origine pour connecter la communauté locale, elle a évolué vers une expérience utilisateur premium alliant esthétique léchée et fonctionnalités robustes.
 
-## 🚀 Fonctionnalités
+## ✨ Nouvelles Fonctionnalités & Améliorations (v2.0)
 
-L'application offre une expérience sociale complète incluant :
+L'application a été entièrement refondue pour offrir une expérience haut de gamme :
 
-- **Authentification sécurisée** : Inscription et connexion via Firebase Auth.
-- **Profil Utilisateur** : Personnalisation du profil avec photo (via `image_picker`), bio et informations personnelles.
-- **Fil d'actualité** : Visualisation des posts de la communauté en temps réel.
-- **Création de contenu** : Publication de messages texte et partage d'images.
-- **Interactions** : Système de likes et commentaires sur les posts.
-- **Membres** : Liste des utilisateurs inscrits pour découvrir de nouvelles personnes.
-- **Notifications** : Suivi des interactions récentes.
-- **Stockage Cloud** : Utilisation de Firebase Storage pour les images et Firestore pour les données.
+- **🎨 Design Moderne & Polie** : Interface basée sur Material 3 avec des bordures ultra-arrondies, des ombres douces et une typographie soignée.
+- **✨ Effets Visuels Premium** :
+  - **Glassmorphism** : Barres de navigation et d'en-tête translucides avec effet de flou (frosted glass).
+  - **Animations Hero** : Transitions fluides des avatars d'un écran à l'autre.
+  - **SliverAppBar** : En-tête de profil dynamique avec effet parallaxe et dégradés protecteurs.
+  - **Shimmer Loading** : Remplacement des spinners par des squelettes de chargement scintillants.
+- **🌙 Mode Sombre Intégral** : Support automatique du thème système (Clair/Sombre) avec une palette de couleurs optimisée.
+- **📍 Géolocalisation Précise** : Détection automatique de la ville avec gestion intelligente des erreurs et repli sur coordonnées GPS.
+- **📝 Gestion Complète des Posts** : Possibilité de **modifier** et **supprimer** ses propres publications (incluant le nettoyage des images dans le Cloud Storage).
+- **💬 Interactions Sociales** : Système de likes ("Vindidi !") et commentaires en temps réel avec notifications intégrées.
 
 ## 🛠️ Stack Technique
 
 - **Framework** : [Flutter](https://flutter.dev/) (Dart)
-- **Backend** : [Firebase](https://firebase.google.com/)
-  - Authentication (Gestion des utilisateurs)
-  - Firestore (Base de données NoSQL en temps réel)
-  - Cloud Storage (Stockage des images de profil et des posts)
-- **Packages principaux** :
-  - `firebase_core`, `firebase_auth`, `cloud_firestore`, `firebase_storage`
-  - `image_picker` (Galerie/Appareil photo)
-  - `intl` (Formatage des dates)
+- **Backend** : [Firebase](https://firebase.google.com/) (Auth, Firestore, Storage)
+- **Packages Clés** :
+  - `shimmer` (Effets de chargement)
+  - `geolocator` & `geocoding` (Localisation)
+  - `image_picker` (Gestion multimédia)
+  - `firebase_ui_auth` (Authentification)
 
 ## 📦 Installation et Lancement
 
 1. **Prérequis** :
-   - Flutter SDK installé
+   - Flutter SDK (^3.10.9)
    - Un projet Firebase configuré
 
-2. **Cloner le dépôt** :
+2. **Installation** :
    ```bash
    git clone https://github.com/RemyMz/chti_face_bouc.git
    cd chti_face_bouc
-   ```
-
-3. **Installer les dépendances** :
-   ```bash
+   git checkout improvements
    flutter pub get
    ```
 
-4. **Configurer Firebase** :
-   - Remplacez/configurez le fichier `lib/firebase_options.dart` avec vos propres clés API Firebase ou utilisez `flutterfire configure`.
-
-5. **Lancer l'application** :
+3. **Lancement** :
    ```bash
-   flutter run
+   flutter run --dart-define=FIREBASE_API_KEY=VOTRE_CLE_API
    ```
 
 ## 📝 Auteur
@@ -57,4 +51,4 @@ L'application offre une expérience sociale complète incluant :
 - **Rémy Mazingue** (RemyMz)
 
 ---
-*Projet réalisé à des fins pédagogiques - IMT Nord Europe*
+*Projet réalisé à des fins pédagogiques - IMT Nord Europe - 2026*
