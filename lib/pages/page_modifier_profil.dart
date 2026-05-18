@@ -3,6 +3,7 @@ import '../modeles/membre.dart';
 import '../modeles/constantes.dart';
 import '../services_firebase/service_firestore.dart';
 import '../services_firebase/service_authentification.dart';
+import '../modeles/donnees.dart';
 
 /// Page permettant à l'utilisateur de modifier ses informations personnelles (nom, prénom, description).
 class PageModifierProfil extends StatefulWidget {
@@ -89,15 +90,15 @@ class _PageModifierProfilState extends State<PageModifierProfil> {
               maxLines: null,
             ),
             const SizedBox(height: 30),
-            // Section déconnexion
             ElevatedButton(
               onPressed: () {
                 showDialog(
                   context: context, 
                   builder: (BuildContext context) {
                     return AlertDialog(
+                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
                       title: const Text("Déconnexion"),
-                      content: const Text("Voulez vous vous déconnecter ?"),
+                      content: const Text(Donnees.logoutConfirm),
                       actions: [
                         TextButton(
                           onPressed: () => Navigator.pop(context), 
@@ -109,15 +110,19 @@ class _PageModifierProfilState extends State<PageModifierProfil> {
                             Navigator.pop(context); // Ferme le dialog
                             Navigator.pop(context); // Ferme la page de modification
                           }, 
-                          child: const Text("OUI")
+                          child: const Text("OUI", style: TextStyle(color: Colors.red))
                         ),
                       ],
                     );
                   }
                 );
               }, 
-              style: ElevatedButton.styleFrom(backgroundColor: Colors.red.shade100),
-              child: const Text("Se déconnecter", style: TextStyle(color: Colors.red)),
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.red.shade50,
+                foregroundColor: Colors.red,
+                elevation: 0,
+              ),
+              child: const Text("Se déconnecter"),
             ),
           ],
         ),
