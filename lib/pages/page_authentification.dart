@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../services_firebase/service_authentification.dart';
 
+/// Page gérant l'authentification des utilisateurs (Connexion et Création de compte).
 class PageAuthentification extends StatefulWidget {
   const PageAuthentification({super.key});
 
@@ -9,14 +10,15 @@ class PageAuthentification extends StatefulWidget {
 }
 
 class _PageAuthentificationState extends State<PageAuthentification> {
-  // a) Les variables
-  bool accountExists = true; // true = connexion, false = création
+  /// Détermine si l'utilisateur tente de se connecter (true) ou de créer un compte (false).
+  bool accountExists = true;
+
+  // Contrôleurs pour les champs de saisie
   final TextEditingController mailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
   final TextEditingController surnameController = TextEditingController();
   final TextEditingController nameController = TextEditingController();
 
-  // b) Les méthodes initState() et dispose()
   @override
   void initState() {
     super.initState();
@@ -24,6 +26,7 @@ class _PageAuthentificationState extends State<PageAuthentification> {
 
   @override
   void dispose() {
+    // Libération des ressources des contrôleurs
     mailController.dispose();
     passwordController.dispose();
     surnameController.dispose();
@@ -31,17 +34,19 @@ class _PageAuthentificationState extends State<PageAuthentification> {
     super.dispose();
   }
 
-  // d) La fonction _onSelectedChanged
+  /// Change l'état entre "Connexion" et "Création de compte".
   void _onSelectedChanged(Set<bool> newValue) {
     setState(() {
       accountExists = newValue.first;
     });
   }
 
-  // e) La fonction _handleHauth
+  /// Gère l'action principale d'authentification en appelant le service Firebase.
   void _handleHauth() async {
     final auth = ServiceAuthentification();
     String? result;
+    
+    // Appel du service approprié selon l'état actuel
     if (accountExists) {
       result = await auth.signIn(mailController.text, passwordController.text);
     } else {
@@ -53,14 +58,18 @@ class _PageAuthentificationState extends State<PageAuthentification> {
       );
     }
 
+    // Affichage d'une erreur si l'authentification échoue
     if (result != null && mounted) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(result), backgroundColor: Colors.red),
+        SnackBar(
+          content: Text(result), 
+          backgroundColor: Colors.red,
+          behavior: SnackBarBehavior.floating,
+        ),
       );
     }
   }
 
-  // c) La méthode build
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -69,11 +78,11 @@ class _PageAuthentificationState extends State<PageAuthentification> {
           child: Column(
             children: [
               const SizedBox(height: 20),
-              // 1. Image (Logo) - Utilisation d'une icône en attendant le logo
+              // Logo ou Icône représentative
               const Icon(Icons.account_circle, size: 120, color: Colors.brown),
               const SizedBox(height: 20),
 
-              // 2. SegmentedButton
+              // Sélecteur entre Connexion et Inscription
               SegmentedButton<bool>(
                 segments: const [
                   ButtonSegment<bool>(
@@ -90,40 +99,57 @@ class _PageAuthentificationState extends State<PageAuthentification> {
               ),
               const SizedBox(height: 20),
 
-              // 3. Card > Container > Column > TextFields
+              // Formulaire d'authentification
               Card(
                 margin: const EdgeInsets.symmetric(horizontal: 20),
-                child: Container(
+                child: Padding(
                   padding: const EdgeInsets.all(16),
                   child: Column(
                     children: [
                       TextField(
                         controller: mailController,
-                        decoration: const InputDecoration(labelText: 'Adresse mail'),
+                        decoration: const InputDecoration(
+                          labelText: 'Adresse mail',
+                          prefixIcon: Icon(Icons.email),
+                        ),
                         keyboardType: TextInputType.emailAddress,
                       ),
                       const SizedBox(height: 10),
                       TextField(
                         controller: passwordController,
-                        decoration: const InputDecoration(labelText: 'Mot de passe'),
+                        decoration: const InputDecoration(
+                          labelText: 'Mot de passe',
+                          prefixIcon: Icon(Icons.lock),
+                        ),
                         obscureText: true,
                       ),
                       const SizedBox(height: 10),
+                      // Champs supplémentaires affichés uniquement lors de la création de compte
                       if (!accountExists) ...[
                         TextField(
                           controller: surnameController,
-                          decoration: const InputDecoration(labelText: 'Prénom'),
+                          decoration: const InputDecoration(
+                            labelText: 'Prénom',
+                            prefixIcon: Icon(Icons.person),
+                          ),
                         ),
                         const SizedBox(height: 10),
                         TextField(
                           controller: nameController,
-                          decoration: const InputDecoration(labelText: 'Nom'),
+                          decoration: const InputDecoration(
+                            labelText: 'Nom',
+                            prefixIcon: Icon(Icons.person_outline),
+                          ),
                         ),
                       ],
                       const SizedBox(height: 20),
-                      ElevatedButton(
-                        onPressed: _handleHauth,
-                        child: Text(accountExists ? "Se connecter" : "Créer mon compte"),
+                      // Bouton de validation
+                      SizedBox(
+                        width: double.infinity,
+                        child: ElevatedButton(
+                          onPressed: _handleHauth,
+                          child: Text(accountExists ? "Se connecter" : "Créer mon compte"),
+                        ),
                       ),
                     ],
                   ),
