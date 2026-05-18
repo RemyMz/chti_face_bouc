@@ -45,11 +45,13 @@ L'application offre une expérience sociale complète incluant :
    ```
 
 4. **Configurer Firebase** :
-   - Remplacez/configurez le fichier `lib/firebase_options.dart` avec vos propres clés API Firebase ou utilisez `flutterfire configure`.
+   - Le projet utilise une variable d'environnement pour la clé API Firebase afin de sécuriser les accès.
+   - Configurez votre projet via `flutterfire configure` ou assurez-vous que `lib/firebase_options.dart` est présent.
 
 5. **Lancer l'application** :
+   Pour lancer l'application, vous devez fournir votre clé API Firebase via `--dart-define` :
    ```bash
-   flutter run
+   flutter run --dart-define=FIREBASE_API_KEY=VOTRE_CLE_API_ICI
    ```
 
 ## 📝 Auteur
