@@ -1,16 +1,60 @@
-# chti_face_bouc
+# Chti Face Bouc 👨‍🌾💻
 
-A new Flutter project.
+**Chti Face Bouc** est une application mobile sociale développée avec **Flutter** et **Firebase**, conçue pour connecter les gens avec une touche locale. Le projet a été réalisé dans le cadre du module de développement mobile à l'IMT.
 
-## Getting Started
+## 🚀 Fonctionnalités
 
-This project is a starting point for a Flutter application.
+L'application offre une expérience sociale complète incluant :
 
-A few resources to get you started if this is your first Flutter project:
+- **Authentification sécurisée** : Inscription et connexion via Firebase Auth.
+- **Profil Utilisateur** : Personnalisation du profil avec photo (via `image_picker`), bio et informations personnelles.
+- **Fil d'actualité** : Visualisation des posts de la communauté en temps réel.
+- **Création de contenu** : Publication de messages texte et partage d'images.
+- **Interactions** : Système de likes et commentaires sur les posts.
+- **Membres** : Liste des utilisateurs inscrits pour découvrir de nouvelles personnes.
+- **Notifications** : Suivi des interactions récentes.
+- **Stockage Cloud** : Utilisation de Firebase Storage pour les images et Firestore pour les données.
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
+## 🛠️ Stack Technique
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+- **Framework** : [Flutter](https://flutter.dev/) (Dart)
+- **Backend** : [Firebase](https://firebase.google.com/)
+  - Authentication (Gestion des utilisateurs)
+  - Firestore (Base de données NoSQL en temps réel)
+  - Cloud Storage (Stockage des images de profil et des posts)
+- **Packages principaux** :
+  - `firebase_core`, `firebase_auth`, `cloud_firestore`, `firebase_storage`
+  - `image_picker` (Galerie/Appareil photo)
+  - `intl` (Formatage des dates)
+
+## 📦 Installation et Lancement
+
+1. **Prérequis** :
+   - Flutter SDK installé
+   - Un projet Firebase configuré
+
+2. **Cloner le dépôt** :
+   ```bash
+   git clone https://github.com/RemyMz/chti_face_bouc.git
+   cd chti_face_bouc
+   ```
+
+3. **Installer les dépendances** :
+   ```bash
+   flutter pub get
+   ```
+
+4. **Configurer Firebase** :
+   - Remplacez/configurez le fichier `lib/firebase_options.dart` avec vos propres clés API Firebase ou utilisez `flutterfire configure`.
+
+5. **Lancer l'application** :
+   ```bash
+   flutter run
+   ```
+
+## 📝 Auteur
+
+- **Rémy Mazingue** (RemyMz)
+
+---
+*Projet réalisé à des fins pédagogiques - IMT Nord Europe*
