@@ -64,25 +64,32 @@ class _PageProfilState extends State<PageProfil> {
                       children: [
                         Stack(
                           alignment: Alignment.bottomCenter,
+                          clipBehavior: Clip.none,
                           children: [
+                            // Espace réservé pour définir la hauteur totale de l'en-tête (200 couverture + 60 débordement avatar)
+                            const SizedBox(height: 260, width: double.infinity),
                             // Image de couverture
-                            Container(
-                              height: 200,
-                              width: double.infinity,
-                              decoration: BoxDecoration(
-                                color: Theme.of(context).colorScheme.primaryContainer,
-                                image: member.coverPicture.isNotEmpty 
-                                  ? DecorationImage(image: NetworkImage(member.coverPicture), fit: BoxFit.cover) 
-                                  : null,
+                            Positioned(
+                              top: 0,
+                              left: 0,
+                              right: 0,
+                              child: Container(
+                                height: 200,
+                                decoration: BoxDecoration(
+                                  color: Theme.of(context).colorScheme.primaryContainer,
+                                  image: member.coverPicture.isNotEmpty 
+                                    ? DecorationImage(image: NetworkImage(member.coverPicture), fit: BoxFit.cover) 
+                                    : null,
+                                ),
+                                child: isMe ? Container(
+                                  alignment: Alignment.bottomRight,
+                                  child: BoutonCamera(type: coverPictureKey, id: member.id),
+                                ) : null,
                               ),
-                              child: isMe ? Container(
-                                alignment: Alignment.bottomRight,
-                                child: BoutonCamera(type: coverPictureKey, id: member.id),
-                              ) : null,
                             ),
-                            // Photo de profil décalée
-                            Transform.translate(
-                              offset: const Offset(0, 50),
+                            // Photo de profil positionnée pour chevaucher la couverture
+                            Positioned(
+                              bottom: 0,
                               child: Stack(
                                 alignment: Alignment.bottomRight,
                                 children: [
@@ -93,7 +100,7 @@ class _PageProfilState extends State<PageProfil> {
                             ),
                           ],
                         ),
-                        const SizedBox(height: 60),
+                        const SizedBox(height: 10),
                         Text(member.fullName, style: Theme.of(context).textTheme.headlineMedium),
                         const Divider(),
                         Padding(
