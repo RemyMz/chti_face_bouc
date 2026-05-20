@@ -4,6 +4,7 @@ import '../services_firebase/service_authentification.dart';
 import '../services_firebase/service_firestore.dart';
 import '../modeles/membre.dart';
 import '../widgets/widget_vide.dart';
+import '../modeles/donnees.dart';
 import 'page_accueil.dart';
 import 'page_membres.dart';
 import 'page_ecrire_post.dart';
@@ -31,61 +32,66 @@ class _PageNavigationState extends State<PageNavigation> {
     if (memberId == null) return const EmptyScaffold();
 
     return StreamBuilder<DocumentSnapshot>(
-      // Récupère les informations détaillées du membre connecté
       stream: ServiceFirestore().specificMember(memberId),
       builder: (context, snapshot) {
-        if (snapshot.connectionState == ConnectionState.waiting) {
-          return const Scaffold(
-            body: Center(child: CircularProgressIndicator()),
-          );
-        }
+        // On récupère les données si elles existent, sinon on crée un membre "temporaire"
+        Membre? member;
         if (snapshot.hasData && snapshot.data?.data() != null) {
           final data = snapshot.data!;
-          final Membre member = Membre(
+          member = Membre(
             reference: data.reference, 
             id: data.id, 
             map: data.data() as Map<String, dynamic>
           );
-
-          // Liste des pages disponibles dans la navigation
-          List<Widget> bodies = [
-            const PageAccueil(),
-            const PageMembres(),
-            PageEcrirePost(member: member, onPostSent: (newIndex) {
-              // Callback pour changer d'onglet après publication d'un post
-              setState(() {
-                index = newIndex;
-              });
-            }),
-            PageNotif(member: member),
-            PageProfil(member: member),
-          ];
-
-          return Scaffold(
-            appBar: AppBar(
-              title: Text(member.fullName),
-            ),
-            body: bodies[index],
-            bottomNavigationBar: NavigationBar(
-              labelBehavior: NavigationDestinationLabelBehavior.onlyShowSelected,
-              selectedIndex: index,
-              onDestinationSelected: (int newValue) {
-                setState(() {
-                  index = newValue;
-                });
-              },
-              destinations: const [
-                NavigationDestination(icon: Icon(Icons.home), label: "Accueil"),
-                NavigationDestination(icon: Icon(Icons.group), label: "Membres"),
-                NavigationDestination(icon: Icon(Icons.border_color), label: "Ecrire"),
-                NavigationDestination(icon: Icon(Icons.notifications), label: "Notification"),
-                NavigationDestination(icon: Icon(Icons.person), label: "Profil"),
-              ],
-            ),
-          );
-        } else {
-          return const EmptyScaffold();
         }
+
+        // Liste des pages disponibles dans la navigation
+        // On gère le cas où le profil n'est pas encore créé/chargé
+        List<Widget> bodies = [
+          const PageAccueil(),
+          const PageMembres(),
+          member != null 
+            ? PageEcrirePost(member: member, onPostSent: (newIndex) => setState(() => index = newIndex))
+            : const EmptyBody(message: "Chargement de votre profil pour poster..."),
+          member != null 
+            ? PageNotif(member: member)
+            : const EmptyBody(message: "Chargement des notifications..."),
+          member != null 
+            ? PageProfil(member: member)
+            : EmptyScaffold(message: Donnees.errorProfile), // On utilise EmptyScaffold ici pour le bouton déconnexion
+        ];
+
+        return Scaffold(
+          appBar: AppBar(
+            title: Text(member?.fullName ?? "Chti Face Bouc"),
+            actions: [
+              if (member == null)
+                IconButton(
+                  onPressed: () => ServiceAuthentification().signOut(), 
+                  icon: const Icon(Icons.logout)
+                )
+            ],
+          ),
+          body: snapshot.connectionState == ConnectionState.waiting && member == null
+            ? const Center(child: CircularProgressIndicator())
+            : bodies[index],
+          bottomNavigationBar: NavigationBar(
+            labelBehavior: NavigationDestinationLabelBehavior.onlyShowSelected,
+            selectedIndex: index,
+            onDestinationSelected: (int newValue) {
+              setState(() {
+                index = newValue;
+              });
+            },
+            destinations: const [
+              NavigationDestination(icon: Icon(Icons.home), label: "Accueil"),
+              NavigationDestination(icon: Icon(Icons.group), label: "Membres"),
+              NavigationDestination(icon: Icon(Icons.border_color), label: "Ecrire"),
+              NavigationDestination(icon: Icon(Icons.notifications), label: "Notification"),
+              NavigationDestination(icon: Icon(Icons.person), label: "Profil"),
+            ],
+          ),
+        );
       },
     );
   }

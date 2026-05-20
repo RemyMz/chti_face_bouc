@@ -11,7 +11,7 @@ import 'service_authentification.dart';
 /// Service gérant toutes les interactions avec la base de données Cloud Firestore.
 /// Centralise les opérations CRUD pour les membres, les posts, les commentaires et les notifications.
 class ServiceFirestore {
-  /// Instance spécifique de Firestore (utilise l'ID de base de données 'defo').
+  /// Instance spécifique de Firestore (ID 'defo' utilisé par l'utilisateur).
   static final instance = FirebaseFirestore.instanceFor(
     app: Firebase.app(),
     databaseId: 'defo'
@@ -22,13 +22,13 @@ class ServiceFirestore {
   final firestorePost = instance.collection(postCollectionKey);
 
   /// Ajoute un nouveau membre à la collection lors de l'inscription.
-  addMember({required String id, required Map<String, dynamic> data}) {
-    firestoreMember.doc(id).set(data);
+  Future<void> addMember({required String id, required Map<String, dynamic> data}) async {
+    await firestoreMember.doc(id).set(data);
   }
 
   /// Met à jour les informations d'un membre existant.
-  updateMember({required String id, required Map<String, dynamic> data}) {
-    firestoreMember.doc(id).update(data);
+  Future<void> updateMember({required String id, required Map<String, dynamic> data}) async {
+    await firestoreMember.doc(id).update(data);
   }
 
   /// Fournit un flux de données (Stream) pour un membre spécifique via son ID.

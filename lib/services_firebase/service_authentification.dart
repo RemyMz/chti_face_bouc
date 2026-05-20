@@ -1,5 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'service_firestore.dart';
+import '../modeles/constantes.dart';
 
 /// Service gérant l'authentification des utilisateurs avec Firebase Auth.
 class ServiceAuthentification {
@@ -30,12 +31,13 @@ class ServiceAuthentification {
       // Création du profil utilisateur dans Firestore après succès de l'auth
       if (credential.user != null) {
         Map<String, dynamic> data = {
-          'uid': credential.user!.uid,
+          memberIdKey: credential.user!.uid,
+          nameKey: name,
+          surnameKey: surname,
+          // L'email n'est pas dans les constantes mais peut être utile
           'email': email,
-          'surname': surname,
-          'name': name,
         };
-        ServiceFirestore().addMember(id: credential.user!.uid, data: data);
+        await ServiceFirestore().addMember(id: credential.user!.uid, data: data);
       }
       return null;
     } catch (e) {

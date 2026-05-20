@@ -74,67 +74,62 @@ class _PageEcrirePostState extends State<PageEcrirePost> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text("Chti Face Bouc"),
-      ),
-      body: SingleChildScrollView(
-        child: Column(
-          children: [
-            Card(
-              margin: const EdgeInsets.all(10),
-              child: Padding(
-                padding: const EdgeInsets.all(10),
-                child: Column(
-                  children: [
-                    const Row(
-                      children: [
-                        Icon(Icons.border_color),
-                        SizedBox(width: 10),
-                        Text("Ecrire un post", style: TextStyle(fontWeight: FontWeight.bold)),
-                      ],
-                    ),
-                    const Divider(),
-                    TextField(
-                      controller: textController,
-                      maxLines: null,
-                      decoration: const InputDecoration(
-                        hintText: Donnees.welcomeMessage,
-                        border: InputBorder.none
-                      ),
-                    ),
-                    // Affichage de l'aperçu de l'image sélectionnée
-                    if (webImage != null || imageFile != null) ...[
-                      const SizedBox(height: 10),
-                      if (kIsWeb && webImage != null)
-                        Image.memory(webImage!, height: 150)
-                      else if (imageFile != null)
-                        Image.file(imageFile!, height: 150),
+    return SingleChildScrollView(
+      child: Column(
+        children: [
+          Card(
+            margin: const EdgeInsets.all(10),
+            child: Padding(
+              padding: const EdgeInsets.all(10),
+              child: Column(
+                children: [
+                  const Row(
+                    children: [
+                      Icon(Icons.border_color),
+                      SizedBox(width: 10),
+                      Text("Ecrire un post", style: TextStyle(fontWeight: FontWeight.bold)),
                     ],
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      children: [
-                        IconButton(
-                          onPressed: () => _takePic(ImageSource.gallery), 
-                          icon: const Icon(Icons.photo_library)
-                        ),
-                        IconButton(
-                          onPressed: () => _takePic(ImageSource.camera), 
-                          icon: const Icon(Icons.camera_alt)
-                        ),
-                      ],
+                  ),
+                  const Divider(),
+                  TextField(
+                    controller: textController,
+                    maxLines: null,
+                    decoration: const InputDecoration(
+                      hintText: Donnees.welcomeMessage,
+                      border: InputBorder.none
                     ),
+                  ),
+                  // Affichage de l'aperçu de l'image sélectionnée
+                  if (webImage != null || imageFile != null) ...[
                     const SizedBox(height: 10),
-                    ElevatedButton(
-                      onPressed: _sendPost, 
-                      child: const Text("Envoyer")
-                    ),
+                    if (kIsWeb && webImage != null)
+                      Image.memory(webImage!, height: 150)
+                    else if (imageFile != null)
+                      Image.file(imageFile!, height: 150),
                   ],
-                ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      IconButton(
+                        onPressed: () => _takePic(ImageSource.gallery), 
+                        icon: const Icon(Icons.photo_library)
+                      ),
+                      IconButton(
+                        onPressed: () => _takePic(ImageSource.camera), 
+                        icon: const Icon(Icons.camera_alt)
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 10),
+                  ElevatedButton(
+                    onPressed: _sendPost, 
+                    child: const Text("Envoyer")
+                  ),
+                ],
               ),
             ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }

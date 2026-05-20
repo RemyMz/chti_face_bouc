@@ -14,36 +14,31 @@ class PageNotif extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text("Mes notifications"),
-      ),
-      body: StreamBuilder<QuerySnapshot>(
-        // Récupère les notifications filtrées pour l'utilisateur actuel
-        stream: ServiceFirestore().notificationForUser(member.id),
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return const Center(child: CircularProgressIndicator());
-          }
-          if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
-            return const EmptyBody();
-          }
-          final docs = snapshot.data!.docs;
-          return ListView.separated(
-            itemCount: docs.length,
-            separatorBuilder: (context, index) => const Divider(height: 1),
-            itemBuilder: (context, index) {
-              // Conversion en objet Notif pour un affichage typé
-              final Notif notification = Notif(
-                reference: docs[index].reference, 
-                id: docs[index].id, 
-                map: docs[index].data() as Map<String, dynamic>
-              );
-              return WidgetNotif(notification: notification);
-            },
-          );
-        },
-      ),
+    return StreamBuilder<QuerySnapshot>(
+      // Récupère les notifications filtrées pour l'utilisateur actuel
+      stream: ServiceFirestore().notificationForUser(member.id),
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return const Center(child: CircularProgressIndicator());
+        }
+        if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
+          return const EmptyBody();
+        }
+        final docs = snapshot.data!.docs;
+        return ListView.separated(
+          itemCount: docs.length,
+          separatorBuilder: (context, index) => const Divider(height: 1),
+          itemBuilder: (context, index) {
+            // Conversion en objet Notif pour un affichage typé
+            final Notif notification = Notif(
+              reference: docs[index].reference, 
+              id: docs[index].id, 
+              map: docs[index].data() as Map<String, dynamic>
+            );
+            return WidgetNotif(notification: notification);
+          },
+        );
+      },
     );
   }
 }

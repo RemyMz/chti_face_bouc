@@ -15,4 +15,7 @@ class Donnees {
   
   /// Message de confirmation de déconnexion.
   static const String logoutConfirm = "Te vux vraiment t'en aller ?";
+
+  /// Message d'erreur profil introuvable.
+  static const String errorProfile = "Ch'est bizarre, j'trouve pas ton profil...";
 }
