@@ -11,11 +11,10 @@ import 'service_authentification.dart';
 /// Service gérant toutes les interactions avec la base de données Cloud Firestore.
 /// Centralise les opérations CRUD pour les membres, les posts, les commentaires et les notifications.
 class ServiceFirestore {
-  /// Instance spécifique de Firestore (ID 'defo' utilisé par l'utilisateur).
-  static final instance = FirebaseFirestore.instanceFor(
-    app: Firebase.app(),
-    databaseId: 'defo'
-  );
+  /// Instance par défaut de Firestore.
+  /// Note : Si vous utilisez une base de données nommée spécifique, remplacez par :
+  /// FirebaseFirestore.instanceFor(app: Firebase.app(), databaseId: 'votre-id')
+  static final instance = FirebaseFirestore.instance;
 
   /// Références aux collections principales
   final firestoreMember = instance.collection(memberCollectionKey);
