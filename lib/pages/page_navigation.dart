@@ -10,6 +10,7 @@ import 'page_membres.dart';
 import 'page_ecrire_post.dart';
 import 'page_profil.dart';
 import 'page_notif.dart';
+import 'page_conversations.dart';
 
 /// Page principale gérant la navigation par onglets avec effets de flou (Glassmorphism).
 class PageNavigation extends StatefulWidget {
@@ -63,6 +64,14 @@ class _PageNavigationState extends State<PageNavigation> {
                     centerTitle: true,
                     elevation: 0,
                     backgroundColor: Theme.of(context).scaffoldBackgroundColor.withOpacity(0.7),
+                    actions: [
+                      IconButton(
+                        icon: const Icon(Icons.mail_outline),
+                        onPressed: () {
+                          Navigator.push(context, MaterialPageRoute(builder: (context) => const PageConversations()));
+                        },
+                      ),
+                    ],
                   ),
                 ),
               ),

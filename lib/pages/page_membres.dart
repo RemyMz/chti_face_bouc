@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import '../services_firebase/service_firestore.dart';
+import '../services_firebase/service_authentification.dart';
 import '../modeles/membre.dart';
 import '../widgets/avatar.dart';
 import '../widgets/widget_vide.dart';
 import 'page_profil.dart';
+import 'page_chat.dart';
 
 /// Page affichant la liste de tous les membres inscrits sur l'application.
 class PageMembres extends StatefulWidget {
@@ -42,6 +44,20 @@ class _PageMembresState extends State<PageMembres> {
                   leading: Avatar(radius: 20, url: member.profilePicture),
                   title: Text(member.fullName),
                   subtitle: Text(member.description, maxLines: 1, overflow: TextOverflow.ellipsis),
+                  trailing: IconButton(
+                    icon: const Icon(Icons.chat_bubble_outline),
+                    onPressed: () async {
+                      final myId = ServiceAuthentification().myId;
+                      if (myId != null && myId != member.id) {
+                        final chatId = await ServiceFirestore().createOrGetChatRoom(myId, member.id);
+                        if (context.mounted) {
+                          Navigator.push(context, MaterialPageRoute(
+                            builder: (context) => PageChat(chatId: chatId, otherMember: member)
+                          ));
+                        }
+                      }
+                    },
+                  ),
                   onTap: () {
                     // Navigation vers la page de profil du membre sélectionné
                     Navigator.push(context, MaterialPageRoute(

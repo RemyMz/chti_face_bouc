@@ -10,6 +10,10 @@ String postCollectionKey = "posts";
 String commentCollectionKey = "comments";
 /// Nom de la collection des notifications.
 String notificationCollectionKey = "notifications";
+/// Nom de la collection des salles de discussion (chats).
+String chatCollectionKey = "chats";
+/// Nom de la sous-collection des messages dans un chat.
+String messageCollectionKey = "messages";
 
 // Member
 /// Clé pour l'identifiant du membre.
@@ -44,3 +48,15 @@ String fromKey = "from";
 String isReadKey = "read";
 /// Clé pour l'identifiant du post lié à la notification.
 String postIdKey = "postID";
+
+// Chat & Message
+/// Clé pour la liste des utilisateurs dans un chat.
+String usersKey = "users";
+/// Clé pour le dernier message envoyé dans le chat.
+String lastMessageKey = "lastMessage";
+/// Clé pour la date de la dernière mise à jour du chat.
+String lastUpdateKey = "lastUpdate";
+/// Clé pour l'identifiant de l'expéditeur d'un message.
+String senderIdKey = "senderId";
+/// Clé pour l'état de lecture d'un message spécifique.
+String isMessageReadKey = "isRead";

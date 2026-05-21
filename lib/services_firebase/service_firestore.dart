@@ -20,6 +20,7 @@ class ServiceFirestore {
   /// Références aux collections principales
   final firestoreMember = instance.collection(memberCollectionKey);
   final firestorePost = instance.collection(postCollectionKey);
+  final firestoreChat = instance.collection(chatCollectionKey);
 
   /// Ajoute un nouveau membre à la collection lors de l'inscription.
   addMember({required String id, required Map<String, dynamic> data}) {
@@ -213,6 +214,83 @@ class ServiceFirestore {
     // Mise à jour de l'URL dans le profil Firestore du membre
     if (imageUrl != null) {
       updateMember(id: memberId, data: {imageName: imageUrl});
+    }
+  }
+
+  // --- MESSAGERIE ---
+
+  /// Récupère ou crée une salle de discussion entre deux utilisateurs.
+  /// L'ID est généré en triant les IDs des utilisateurs pour qu'il soit unique et partagé.
+  Future<String> createOrGetChatRoom(String user1Id, String user2Id) async {
+    List<String> ids = [user1Id, user2Id];
+    ids.sort(); // Garantit que l'ID est le même peu importe l'ordre (A_B ou B_A)
+    String chatId = ids.join("_");
+
+    final chatDoc = await firestoreChat.doc(chatId).get();
+    if (!chatDoc.exists) {
+      await firestoreChat.doc(chatId).set({
+        usersKey: ids,
+        lastMessageKey: "",
+        lastUpdateKey: DateTime.now().millisecondsSinceEpoch,
+      });
+    }
+    return chatId;
+  }
+
+  /// Envoie un message dans une discussion.
+  Future<void> sendMessage({required String chatId, required String text}) async {
+    final myId = ServiceAuthentification().myId;
+    if (myId == null || text.trim().isEmpty) return;
+
+    final timestamp = DateTime.now().millisecondsSinceEpoch;
+    Map<String, dynamic> messageData = {
+      senderIdKey: myId,
+      textKey: text,
+      dateKey: timestamp,
+      isMessageReadKey: false,
+    };
+
+    // 1. Ajouter le message à la sous-collection
+    await firestoreChat.doc(chatId).collection(messageCollectionKey).add(messageData);
+
+    // 2. Mettre à jour les infos du chat (dernier message et date)
+    await firestoreChat.doc(chatId).update({
+      lastMessageKey: text,
+      lastUpdateKey: timestamp,
+    });
+  }
+
+  /// Récupère le flux de discussions pour un utilisateur.
+  Stream<QuerySnapshot> streamChatsForUser(String userId) {
+    return firestoreChat
+        .where(usersKey, arrayContains: userId)
+        .orderBy(lastUpdateKey, descending: true)
+        .snapshots();
+  }
+
+  /// Récupère le flux de messages pour une discussion donnée.
+  Stream<QuerySnapshot> streamMessagesForChat(String chatId) {
+    return firestoreChat
+        .doc(chatId)
+        .collection(messageCollectionKey)
+        .orderBy(dateKey, descending: true)
+        .snapshots();
+  }
+
+  /// Marque les messages comme lus (optionnel, pour plus tard).
+  markMessagesAsRead(String chatId) async {
+    final myId = ServiceAuthentification().myId;
+    if (myId == null) return;
+    
+    final unreadMessages = await firestoreChat
+      .doc(chatId)
+      .collection(messageCollectionKey)
+      .where(senderIdKey, isNotEqualTo: myId)
+      .where(isMessageReadKey, isEqualTo: false)
+      .get();
+
+    for (var doc in unreadMessages.docs) {
+      await doc.reference.update({isMessageReadKey: true});
     }
   }
 }
