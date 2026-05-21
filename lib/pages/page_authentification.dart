@@ -78,6 +78,12 @@ class _PageAuthentificationState extends State<PageAuthentification> {
           child: Column(
             children: [
               const SizedBox(height: 20),
+              // Titre en jargon local
+              const Text(
+                "T'in pour commincher",
+                style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold, color: Colors.brown),
+              ),
+              const SizedBox(height: 10),
               // Logo ou Icône représentative
               const Icon(Icons.account_circle, size: 120, color: Colors.brown),
               const SizedBox(height: 20),

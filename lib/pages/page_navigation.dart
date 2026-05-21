@@ -65,6 +65,12 @@ class _PageNavigationState extends State<PageNavigation> {
           appBar: AppBar(
             title: Text(member?.fullName ?? "Chti Face Bouc"),
             actions: [
+              if (index == 0) // Uniquement sur l'accueil
+                IconButton(
+                  tooltip: Donnees.refreshLabel,
+                  onPressed: () => setState(() {}), 
+                  icon: const Icon(Icons.refresh)
+                ),
               if (member == null)
                 IconButton(
                   onPressed: () => ServiceAuthentification().signOut(), 

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'firebase_options.dart';
-import 'pages/page_applicationl.dart';
+import 'pages/page_application.dart';
 
 /// Point d'entrée principal de l'application Chti Face Bouc.
 /// Initialise Firebase et lance le widget racine.
@@ -33,7 +33,7 @@ class MyApp extends StatelessWidget {
         useMaterial3: true,
       ),
       // Redirection vers le gestionnaire d'état de l'application (Auth vs Accueil)
-      home: const PageApplicationl(),
+      home: const PageApplication(),
     );
   }
 }
