@@ -58,7 +58,7 @@ class _PageNavigationState extends State<PageNavigation> {
             : const EmptyBody(message: "Chargement des notifications..."),
           member != null 
             ? PageProfil(member: member)
-            : EmptyScaffold(message: Donnees.errorProfile), // On utilise EmptyScaffold ici pour le bouton déconnexion
+            : const EmptyScaffold(message: Donnees.errorProfile), // On utilise EmptyScaffold ici pour le bouton déconnexion
         ];
 
         return Scaffold(

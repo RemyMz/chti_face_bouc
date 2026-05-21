@@ -1,6 +1,5 @@
-/// Clés utilisées pour les collections et les documents dans Firestore.
-/// Centralise les chaînes de caractères pour éviter les erreurs de frappe.
-
+// Clés utilisées pour les collections et les documents dans Firestore.
+// Centralise les chaînes de caractères pour éviter les erreurs de frappe.
 // Collections
 /// Nom de la collection des membres.
 String memberCollectionKey = "members";
