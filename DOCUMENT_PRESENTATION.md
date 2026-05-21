@@ -8,8 +8,8 @@
 - **Système d'exploitation :** macOS Ventura (Version 13.7.8)
 - **Version Flutter :** 3.38.10
 - **Version Dart :** 3.10.9
-- **IDE :** VS Code / Android Studio
-- **Environnement de test :** Simulateur iOS (iPhone 15) et Émulateur Android (Pixel 7)
+- **IDE :** VS Code
+- **Environnement de test :** Google Chrome
 
 ## 2. Descriptif de l'application
 Cht'i Face Bouc est une application sociale hyper-locale dédiée aux habitants des Hauts-de-France. Elle allie les fonctionnalités classiques d'un réseau social à une identité visuelle et textuelle ancrée dans la culture du Nord.
@@ -32,4 +32,3 @@ Cht'i Face Bouc est une application sociale hyper-locale dédiée aux habitants 
 - **Index Firestore :** La mise en place du tri par date sur des requêtes filtrées a nécessité la création d'index composites sur la console Firebase.
 
 ## 5. Captures d'écran
-*(Note : Pensez à ajouter ici 2 ou 3 captures d'écran de votre simulateur en fonctionnement)*

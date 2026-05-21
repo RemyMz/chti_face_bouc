@@ -13,19 +13,16 @@ L'application nécessite un projet Firebase actif. Vous devez :
 ## 2. Liaison de l'application
 Vous avez deux options pour configurer les clefs API :
 
-### Option A : Utiliser FlutterFire CLI (Recommandé)
+### Utiliser FlutterFire CLI 
 Exécutez la commande suivante à la racine du projet pour générer automatiquement le fichier `lib/firebase_options.dart` :
 ```bash
 flutterfire configure
 ```
 
-### Option B : Configuration manuelle
-- **Android** : Placez votre fichier `google-services.json` dans `android/app/`.
-- **iOS** : Placez votre fichier `GoogleService-Info.plist` dans `ios/Runner/`.
 
 ## 3. Base de données Firestore
 Par défaut, l'application utilise la base de données **`(default)`**.
-Si vous souhaitez utiliser une base de données avec un ID spécifique, vous pouvez modifier le fichier `lib/services_firebase/service_firestore.dart` à la ligne 18 :
+Si vous souhaitez utiliser une base de données avec un ID spécifique, vous pouvez modifier le fichier `lib/services_firebase/service_firestore.dart` à la ligne 16 :
 ```dart
 static final instance = FirebaseFirestore.instanceFor(app: Firebase.app(), databaseId: 'VOTRE_ID');
 ```
@@ -39,4 +36,3 @@ flutter run
 
 ---
 **Développé par :** MAZINGUE Rémy
-**Version :** 1.0 (Rendu Final)
