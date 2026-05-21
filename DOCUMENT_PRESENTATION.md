@@ -32,3 +32,19 @@ Cht'i Face Bouc est une application sociale hyper-locale dédiée aux habitants 
 - **Index Firestore :** La mise en place du tri par date sur des requêtes filtrées a nécessité la création d'index composites sur la console Firebase.
 
 ## 5. Captures d'écran
+
+| Connexion | Accueil |
+| :---: | :---: |
+| ![Connexion](captures/ecran_connexion.png) | ![Accueil](captures/ecran_accueil.png) |
+
+| Écrire un Post | Commentaires |
+| :---: | :---: |
+| ![Post](captures/page_post.png) | ![Commentaires](captures/page_commentaire.png) |
+
+| Profil Utilisateur | Modification Profil |
+| :---: | :---: |
+| ![Profil](captures/page_profil.png) | ![Modification](captures/page_modif_profil.png) |
+
+| Liste des Membres | Notifications |
+| :---: | :---: |
+| ![Membres](captures/page_membre.png) | ![Notifications](captures/page_notifs.png) |
