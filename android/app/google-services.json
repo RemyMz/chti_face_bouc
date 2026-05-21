@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "8549858504",
+    "project_id": "chti-face-bouc-623be",
+    "storage_bucket": "chti-face-bouc-623be.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:8549858504:android:bbf788896825917beaf9fd",
+        "android_client_info": {
+          "package_name": "com.example.chti_face_bouc"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC5oYVRc6ya4lvljmbdeu9rlhpT4eyZdb0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

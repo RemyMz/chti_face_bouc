@@ -45,16 +45,16 @@ class _PageAuthentificationState extends State<PageAuthentification> {
   void _handleHauth() async {
     final auth = ServiceAuthentification();
     String? result;
-    
+
     // Appel du service approprié selon l'état actuel
     if (accountExists) {
       result = await auth.signIn(mailController.text, passwordController.text);
     } else {
       result = await auth.createAccount(
-        mailController.text, 
-        passwordController.text, 
-        surnameController.text, 
-        nameController.text
+        mailController.text,
+        passwordController.text,
+        surnameController.text,
+        nameController.text,
       );
     }
 
@@ -62,7 +62,7 @@ class _PageAuthentificationState extends State<PageAuthentification> {
     if (result != null && mounted) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text(result), 
+          content: Text(result),
           backgroundColor: Colors.red,
           behavior: SnackBarBehavior.floating,
         ),
@@ -87,11 +87,11 @@ class _PageAuthentificationState extends State<PageAuthentification> {
                 segments: const [
                   ButtonSegment<bool>(
                     value: false,
-                    label: Text("Créer un compte"),
+                    label: Text("Créer tin compte"),
                   ),
                   ButtonSegment<bool>(
                     value: true,
-                    label: Text("S'y connecter"),
+                    label: Text("y va connecter"),
                   ),
                 ],
                 selected: <bool>{accountExists},
@@ -148,7 +148,9 @@ class _PageAuthentificationState extends State<PageAuthentification> {
                         width: double.infinity,
                         child: ElevatedButton(
                           onPressed: _handleHauth,
-                          child: Text(accountExists ? "Se connecter" : "Créer mon compte"),
+                          child: Text(
+                            accountExists ? "Se connecter" : "Créer mon compte",
+                          ),
                         ),
                       ),
                     ],
