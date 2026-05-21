@@ -6,7 +6,6 @@ import '../widgets/avatar.dart';
 import '../modeles/membre.dart';
 import '../modeles/post.dart';
 import '../pages/page_detail_post.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 
 /// Widget représentant un élément de notification dans la liste des notifications.
 class WidgetNotif extends StatelessWidget {
@@ -16,18 +15,13 @@ class WidgetNotif extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return StreamBuilder<DocumentSnapshot>(
+    return FutureBuilder<Membre?>(
       // Récupère les informations de l'expéditeur de la notification
-      stream: ServiceFirestore().specificMember(notification.from),
+      future: ServiceFirestore().getMember(notification.from),
       builder: (context, snapshot) {
-        if (!snapshot.hasData || snapshot.data?.data() == null) return const SizedBox();
+        if (!snapshot.hasData || snapshot.data == null) return const SizedBox();
         
-        final data = snapshot.data!;
-        final Membre member = Membre(
-          reference: data.reference, 
-          id: data.id, 
-          map: data.data() as Map<String, dynamic>
-        );
+        final Membre member = snapshot.data!;
 
         return Container(
           // Met en évidence les notifications non lues par une couleur de fond

@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import '../services_firebase/service_firestore.dart';
 import '../modeles/membre.dart';
 import 'formatage_date.dart';
@@ -18,18 +17,13 @@ class EnteteMembre extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return StreamBuilder<DocumentSnapshot>(
-      // Récupère les données du membre en temps réel
-      stream: ServiceFirestore().specificMember(memberId),
+    return FutureBuilder<Membre?>(
+      // Récupère les données du membre une seule fois
+      future: ServiceFirestore().getMember(memberId),
       builder: (context, snapshot) {
-        if (!snapshot.hasData || snapshot.data?.data() == null) return const SizedBox();
+        if (!snapshot.hasData || snapshot.data == null) return const SizedBox();
         
-        final data = snapshot.data!;
-        final Membre member = Membre(
-          reference: data.reference, 
-          id: data.id, 
-          map: data.data() as Map<String, dynamic>
-        );
+        final Membre member = snapshot.data!;
 
         return Row(
           children: [
