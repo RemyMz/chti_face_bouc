@@ -87,11 +87,11 @@ class _PageAuthentificationState extends State<PageAuthentification> {
                 segments: const [
                   ButtonSegment<bool>(
                     value: false,
-                    label: Text("Créer un compte"),
+                    label: Text("Créer tin compte"),
                   ),
                   ButtonSegment<bool>(
                     value: true,
-                    label: Text("S'y connecter"),
+                    label: Text("y va connecter"),
                   ),
                 ],
                 selected: <bool>{accountExists},
