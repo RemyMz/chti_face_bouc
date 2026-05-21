@@ -25,6 +25,7 @@ L'application se distingue par l'intégration d'expressions picardes et une ambi
 
 - **Framework** : [Flutter](https://flutter.dev/) (Dart)
 - **Backend (Firebase)** : Firestore, Authentication, Cloud Storage.
+- **Configuration Finale** : L'application est configurée pour utiliser la base de données Firestore nommée **`defo`**.
 - **Optimisations de Performance** : 
   - Utilisation du pattern **Singleton** pour les services Firebase.
   - Bascule sur des `FutureBuilder` pour les données membres dans les listes afin d'éliminer le lag et réduire la consommation de données.
@@ -46,4 +47,4 @@ flutter run
 
 ---
 **Développé par :** Rémy Mazingue (IMT Nord Europe)  
-**Version :** 1.1 (Optimisé - Mai 2026)
+**Version :** 1.2 (Final - DB defo - Mai 2026)
