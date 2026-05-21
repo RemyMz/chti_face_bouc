@@ -16,11 +16,8 @@ class ServiceFirestore {
   factory ServiceFirestore() => _instance;
   ServiceFirestore._internal();
 
-  /// Instance spécifique de Firestore (ID 'defo').
-  static final firestore = FirebaseFirestore.instanceFor(
-    app: Firebase.app(),
-    databaseId: 'defo'
-  );
+  /// Instance par défaut de Firestore.
+  static final firestore = FirebaseFirestore.instance;
 
   /// Références aux collections principales
   final firestoreMember = firestore.collection(memberCollectionKey);
