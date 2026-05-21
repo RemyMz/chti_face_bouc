@@ -121,6 +121,15 @@ class ServiceFirestore {
     return firestorePost.doc(postId).collection(commentCollectionKey).orderBy(dateKey, descending: true).snapshots();
   }
 
+  /// Récupère un post spécifique par son ID.
+  Future<Post?> getSpecificPost(String postId) async {
+    final doc = await firestorePost.doc(postId).get();
+    if (doc.exists) {
+      return Post(reference: doc.reference, id: doc.id, map: doc.data() as Map<String, dynamic>);
+    }
+    return null;
+  }
+
   /// Crée une notification pour un utilisateur spécifique.
   /// Empêche l'envoi d'une notification à soi-même.
   sendNotification({required String to, required String text, required String postID}) {
