@@ -7,27 +7,28 @@
 ## 🌟 Points Forts & Identité Locale
 L'application se distingue par l'intégration d'expressions picardes et une ambiance conviviale :
 - **"Vindidi !"** : Pour aimer une publication.
-- **"Eun' tiote rincette"** : Pour rafraîchir le contenu.
-- **"Biloute"** : L'accueil chaleureux réservé à chaque utilisateur.
+- **"Eun' tiote rincette"** : Pour rafraîchir le contenu (bouton dans la barre du haut).
+- **"T'in pour commincher"** : Accueil chaleureux sur la page d'authentification.
+- **"Quoi de neuf, biloute ?"** : L'invitation à partager son humeur.
 
 ## 🚀 Fonctionnalités Implémentées
 
 - **🔐 Authentification** : Système complet de création de compte et de connexion sécurisée (Firebase Auth).
 - **👤 Profil Personnalisé** : Chaque membre peut définir sa photo de profil, sa photo de couverture et sa description.
-- **📰 Fil d'Actualité** : Consultation des publications de la communauté en temps réel avec gestion du scroll infini.
-- **📸 Partage de Contenu** : Publication de textes et d'images capturées via l'appareil photo ou la galerie.
-- **💬 Interactions Sociales** : Système de "Likes" et de commentaires en cascade sur chaque publication.
+- **📰 Fil d'Actualité** : Consultation des publications de la communauté en temps réel.
+- **📸 Partage de Contenu** : Publication de textes et d'images avec **système anti-doublon** (chargement visuel pendant l'envoi).
+- **💬 Interactions Sociales** : Système de "Likes" et de commentaires en cascade.
 - **👥 Annuaire des Membres** : Liste complète des inscrits pour favoriser la connexion entre voisins.
-- **🔔 Notifications Internes** : Suivi en temps réel des interactions sur ses propres publications.
+- **🔔 Notifications Intelligentes** : Suivi des interactions avec **navigation directe** vers le post concerné.
 
-## 🛠️ Stack Technique
+## 🛠️ Stack Technique & Optimisations
 
 - **Framework** : [Flutter](https://flutter.dev/) (Dart)
-- **Backend (Firebase)** :
-  - **Firestore** : Base de données NoSQL pour la synchronisation temps réel.
-  - **Authentication** : Gestion sécurisée des sessions utilisateurs.
-  - **Cloud Storage** : Stockage persistant des images de profil et des posts.
-- **Architecture** : Pattern Service-Model-Widget pour une séparation nette de la logique métier et de l'interface.
+- **Backend (Firebase)** : Firestore, Authentication, Cloud Storage.
+- **Optimisations de Performance** : 
+  - Utilisation du pattern **Singleton** pour les services Firebase.
+  - Bascule sur des `FutureBuilder` pour les données membres dans les listes afin d'éliminer le lag et réduire la consommation de données.
+- **Architecture** : Pattern Service-Model-Widget.
 
 ## 📦 Installation et Lancement
 
@@ -45,4 +46,4 @@ flutter run
 
 ---
 **Développé par :** Rémy Mazingue (IMT Nord Europe)  
-**Version :** 1.0 (Rendu Final - Mai 2026)
+**Version :** 1.1 (Optimisé - Mai 2026)

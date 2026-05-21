@@ -11,20 +11,21 @@ L'application nécessite un projet Firebase actif. Vous devez :
    - **Firebase Storage** (pour le stockage des photos de profil et des posts).
 
 ## 2. Liaison de l'application
-Vous avez deux options pour configurer les clefs API :
+Pour des raisons de sécurité, les fichiers de configuration contenant les clés API (`google-services.json` et `firebase_options.dart`) sont ignorés par Git.
 
-### Utiliser FlutterFire CLI 
-Exécutez la commande suivante à la racine du projet pour générer automatiquement le fichier `lib/firebase_options.dart` :
+### Générer les options Firebase 
+Exécutez la commande suivante à la racine du projet (nécessite [FlutterFire CLI](https://firebase.flutter.dev/docs/cli/)) :
 ```bash
 flutterfire configure
 ```
-
+Cela générera automatiquement le fichier `lib/firebase_options.dart` nécessaire au lancement.
 
 ## 3. Base de données Firestore
-Par défaut, l'application utilise la base de données **`(default)`**.
-Si vous souhaitez utiliser une base de données avec un ID spécifique, vous pouvez modifier le fichier `lib/services_firebase/service_firestore.dart` à la ligne 16 :
+Par défaut, l'application est configurée pour utiliser la base de données **`(default)`**.
+
+Si vous utilisez une base de données avec un identifiant spécifique (ex: `defo`), modifiez la configuration dans `lib/services_firebase/service_firestore.dart` :
 ```dart
-static final instance = FirebaseFirestore.instanceFor(app: Firebase.app(), databaseId: 'VOTRE_ID');
+static final firestore = FirebaseFirestore.instanceFor(app: Firebase.app(), databaseId: 'defo');
 ```
 
 ## 4. Lancement
