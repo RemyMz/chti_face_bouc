@@ -24,6 +24,7 @@ class _PageEcrirePostState extends State<PageEcrirePost> {
   late TextEditingController textController;
   File? imageFile;
   Uint8List? webImage;
+  bool _isLoading = false;
 
   @override
   void initState() {
@@ -59,7 +60,11 @@ class _PageEcrirePostState extends State<PageEcrirePost> {
   /// Valide et envoie la publication vers Firestore et Storage.
   void _sendPost() async {
     FocusScope.of(context).requestFocus(FocusNode());
-    if (textController.text.isEmpty) return;
+    if (textController.text.isEmpty || _isLoading) return;
+
+    setState(() {
+      _isLoading = true;
+    });
 
     await ServiceFirestore().createPost(
       widget.member, 
@@ -111,20 +116,22 @@ class _PageEcrirePostState extends State<PageEcrirePost> {
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: [
                       IconButton(
-                        onPressed: () => _takePic(ImageSource.gallery), 
+                        onPressed: _isLoading ? null : () => _takePic(ImageSource.gallery), 
                         icon: const Icon(Icons.photo_library)
                       ),
                       IconButton(
-                        onPressed: () => _takePic(ImageSource.camera), 
+                        onPressed: _isLoading ? null : () => _takePic(ImageSource.camera), 
                         icon: const Icon(Icons.camera_alt)
                       ),
                     ],
                   ),
                   const SizedBox(height: 10),
-                  ElevatedButton(
-                    onPressed: _sendPost, 
-                    child: const Text("Envoyer")
-                  ),
+                  _isLoading 
+                    ? const CircularProgressIndicator()
+                    : ElevatedButton(
+                        onPressed: _sendPost, 
+                        child: const Text("Envoyer")
+                      ),
                 ],
               ),
             ),
